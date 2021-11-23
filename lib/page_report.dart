@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PageReport extends StatefulWidget {
   const PageReport({Key? key}) : super(key: key);
@@ -17,6 +18,10 @@ class _PageReportState extends State<PageReport> {
   String _formatSelected = "WebPage";
   var formatItems = ["WebPage", "PDF", "Text"];
 
+  String _fromDate = DateFormat("yyyy-MM-dd").format(DateTime.now());
+
+  String _toDate = DateFormat("yyyy-MM-dd").format(DateTime.now().add(const Duration(days: 1)));
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,23 +31,20 @@ class _PageReportState extends State<PageReport> {
         body: Container(
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      child: Text("Period "),
+                      child: const Text("Period "),
                     ),
                     DropdownButton(
                       value: _periodSelected,
                       items: periodItems.map((String periodItems) {
                         return DropdownMenuItem(
-                            value: periodItems,
-                            child: Text(periodItems)
-                        );
+                            value: periodItems, child: Text(periodItems));
                       }).toList(),
-
                       onChanged: (String? newValue) {
                         setState(() {
                           _periodSelected = newValue!;
@@ -52,27 +54,47 @@ class _PageReportState extends State<PageReport> {
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
-                      child: Text("From "),
+                      child: const Text("From "),
                     ),
-                    Text("2021-11-11"),
-                    Icon(Icons.calendar_today)
+                    Container(
+                      child: Row(children: [
+                        Text(_fromDate),
+                        const Text("  "),
+                        IconButton(
+                          icon: Icon(Icons.calendar_today_outlined),
+                          highlightColor: Colors.cyan,
+                          color: Colors.cyan,
+                          onPressed: () {},
+                        )
+                      ]),
+                    ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
                       child: Text("To "),
                     ),
-                    Text("2021-11-13"),
-                    Icon(Icons.calendar_today)
+                    Container(
+                      child: Row(children: [
+                        Text(_toDate),
+                        const Text("  "),
+                        IconButton(
+                          icon: Icon(Icons.calendar_today_outlined),
+                          highlightColor: Colors.cyan,
+                          color: Colors.cyan,
+                          onPressed: () {},
+                        )
+                      ]),
+                    ),
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
                       child: Text("Content "),
@@ -83,7 +105,6 @@ class _PageReportState extends State<PageReport> {
                         return DropdownMenuItem(
                             value: contentItems, child: Text(contentItems));
                       }).toList(),
-
                       onChanged: (String? newValue) {
                         setState(() {
                           _contentSelected = newValue!;
@@ -93,7 +114,7 @@ class _PageReportState extends State<PageReport> {
                   ],
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Container(
                       child: Text("Format "),
@@ -104,13 +125,23 @@ class _PageReportState extends State<PageReport> {
                         return DropdownMenuItem(
                             value: formatItems, child: Text(formatItems));
                       }).toList(),
-
                       onChanged: (String? newValue) {
                         setState(() {
                           _formatSelected = newValue!;
                         });
                       },
                     )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                        child: TextButton(
+                      child: const Text("Generate",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      onPressed: () {},
+                    )),
                   ],
                 ),
               ],
