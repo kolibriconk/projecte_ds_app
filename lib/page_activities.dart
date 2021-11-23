@@ -24,8 +24,9 @@ class _PageActivitiesState extends State<PageActivities> {
         title: Text(tree.root.name),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.home),
-              onPressed: () {}
-            // TODO go home page = root
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
           ),
           //TODO other actions
           IconButton(icon: Icon(Icons.assignment_outlined),

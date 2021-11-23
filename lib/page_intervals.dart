@@ -1,3 +1,4 @@
+import 'package:codelab_timetracker/page_activities.dart';
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/tree.dart' as Tree;
 // to avoid collision with an Interval class in another library
@@ -25,7 +26,9 @@ class _PageIntervalsState extends State<PageIntervals> {
         title: Text(tree.root.name),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.home),
-              onPressed: () {} // TODO go home page = root
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
           ),
           //TODO other actions
         ],
