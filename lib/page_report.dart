@@ -11,9 +11,22 @@ class PageReport extends StatefulWidget {
 DateTime _today = DateTime.now();
 
 class _PageReportState extends State<PageReport> {
-  var periodItems = ["Last week", "This week", "Yesterday", "Today", "Other"];
-  var contentItems = ["Brief", "Detailed", "Statistic"];
-  var formatItems = ["WebPage", "PDF", "Text"];
+  static const String lastWeekPeriod = "Last week";
+  static const String thisWeekPeriod = "This week";
+  static const String yesterdayPeriod = "Yesterday";
+  static const String todayPeriod = "Today";
+  static const String otherPeriod = "Other";
+  var periodItems = [lastWeekPeriod, thisWeekPeriod, yesterdayPeriod, todayPeriod, otherPeriod];
+
+  static const String briefContent = "Brief";
+  static const String detailedContent = "Detailed";
+  static const String statisticContent = "Statistic";
+  var contentItems = [briefContent, detailedContent, statisticContent];
+
+  static const String webPageContent = "WebPage";
+  static const String pdfContent = "PDF";
+  static const String textContent = "Text";
+  var formatItems = [webPageContent, pdfContent, textContent];
 
   late String _periodSelected;
   late String _formatSelected;
@@ -55,11 +68,8 @@ class _PageReportState extends State<PageReport> {
                       return DropdownMenuItem(
                           value: periodItems, child: Text(periodItems));
                     }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _periodSelected = newValue!;
-                      });
-                    },
+                    onChanged: (String? newValue) =>
+                        _setDatesAccording(newValue),
                   ),
                 ],
               ),
@@ -188,18 +198,18 @@ class _PageReportState extends State<PageReport> {
       lastDate: DateTime(_today.year + 5),
       initialDate: _dateRange.end,
     );
-    DateTime start =_dateRange.start; // the present To date
+    DateTime start = _dateRange.start; // the present To date
     if (newEnd!.difference(start) >= const Duration(days: 0)) {
       _dateRange = DateTimeRange(start: start, end: newEnd);
       setState(() {
-        _periodSelected = 'Other'; // to redraw the screen
+        _periodSelected = otherPeriod; // to redraw the screen
       });
     } else {
       _showAlertDates();
     }
   }
 
-  void _showAlertDates() {
+  _showAlertDates() {
     showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -215,5 +225,51 @@ class _PageReportState extends State<PageReport> {
                     ))
               ],
             ));
+  }
+
+  _setDatesAccording(String? newValue) {
+    DateTime yesterday = _today.subtract(const Duration(days:1));
+    DateTime mondayThisWeek = DateTime(_today.year, _today.month,
+        _today.day - _today.weekday + 1);
+    DateTime sundayLastWeek = mondayThisWeek.subtract(const Duration(days:1));
+    DateTime mondayLastWeek = mondayThisWeek.subtract(const Duration(days:7));
+
+    //Setting default values
+    DateTime newStart = mondayLastWeek;
+    DateTime newEnd = sundayLastWeek;
+    String periodSelected = lastWeekPeriod;
+
+    switch(newValue){
+      case thisWeekPeriod:
+        newStart = mondayThisWeek;
+        newEnd = _today;
+        periodSelected = thisWeekPeriod;
+        break;
+
+      case yesterdayPeriod:
+        newStart = yesterday;
+        newEnd = yesterday;
+        periodSelected = yesterdayPeriod;
+        break;
+
+      case todayPeriod:
+        newStart = _today;
+        newEnd = _today;
+        periodSelected = todayPeriod;
+        break;
+
+      case otherPeriod:
+        periodSelected = otherPeriod;
+        break;
+
+      case lastWeekPeriod:
+      default:
+    }
+
+    //Updating values
+    setState(() {
+      _periodSelected = periodSelected;
+      _dateRange = DateTimeRange(start: newStart, end: newEnd);
+    });
   }
 }
