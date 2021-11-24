@@ -37,10 +37,9 @@ class _PageReportState extends State<PageReport> {
   @override
   void initState() {
     _dateFormat = DateFormat("yyyy-MM-dd");
-    _dateRange = DateTimeRange(start: _today, end: _today);
-    _contentSelected = contentItems[0];
-    _formatSelected = formatItems[0];
-    _periodSelected = periodItems[0];
+    _contentSelected = briefContent;
+    _formatSelected = webPageContent;
+    _setDatesAccording(lastWeekPeriod);
     super.initState();
   }
 
@@ -51,6 +50,7 @@ class _PageReportState extends State<PageReport> {
           title: const Text('Report'),
         ),
         body: Container(
+          margin: const EdgeInsets.only(left: 80),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -60,7 +60,6 @@ class _PageReportState extends State<PageReport> {
                   Container(
                     child: const Text("Period"),
                     width: 100,
-                    margin: const EdgeInsets.only(left: 80),
                   ),
                   DropdownButton(
                     value: _periodSelected,
@@ -79,7 +78,6 @@ class _PageReportState extends State<PageReport> {
                   Container(
                     child: const Text("From"),
                     width: 100,
-                    margin: const EdgeInsets.only(left: 80),
                   ),
                   Text(_dateFormat.format(_dateRange.start)),
                   IconButton(
@@ -98,7 +96,6 @@ class _PageReportState extends State<PageReport> {
                   Container(
                     child: const Text("To"),
                     width: 100,
-                    margin: const EdgeInsets.only(left: 80),
                   ),
                   Text(_dateFormat.format(_dateRange.end)),
                   IconButton(
@@ -117,7 +114,6 @@ class _PageReportState extends State<PageReport> {
                   Container(
                     child: const Text("Content"),
                     width: 100,
-                    margin: const EdgeInsets.only(left: 80),
                   ),
                   DropdownButton(
                     value: _contentSelected,
@@ -139,7 +135,6 @@ class _PageReportState extends State<PageReport> {
                   Container(
                     child: const Text("Format"),
                     width: 100,
-                    margin: const EdgeInsets.only(left: 80),
                   ),
                   DropdownButton(
                     value: _formatSelected,
