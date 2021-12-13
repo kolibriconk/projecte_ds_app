@@ -16,9 +16,9 @@ class MyApp extends StatelessWidget {
             subtitle1: TextStyle(fontSize: 20.0),
             bodyText2: TextStyle(fontSize: 20.0)),
       ),
-      home: PageActivities(),
+      home: PageActivities(0),
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => new PageActivities()
+        '/home': (BuildContext context) => new PageActivities(0)
       },
     );
   }

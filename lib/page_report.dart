@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -16,7 +17,13 @@ class _PageReportState extends State<PageReport> {
   static const String yesterdayPeriod = "Yesterday";
   static const String todayPeriod = "Today";
   static const String otherPeriod = "Other";
-  var periodItems = [lastWeekPeriod, thisWeekPeriod, yesterdayPeriod, todayPeriod, otherPeriod];
+  var periodItems = [
+    lastWeekPeriod,
+    thisWeekPeriod,
+    yesterdayPeriod,
+    todayPeriod,
+    otherPeriod
+  ];
 
   static const String briefContent = "Brief";
   static const String detailedContent = "Detailed";
@@ -55,7 +62,6 @@ class _PageReportState extends State<PageReport> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     child: const Text("Period"),
@@ -73,7 +79,6 @@ class _PageReportState extends State<PageReport> {
                 ],
               ),
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
                     child: const Text("From"),
@@ -91,7 +96,6 @@ class _PageReportState extends State<PageReport> {
                 ],
               ),
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     child: const Text("To"),
@@ -109,7 +113,6 @@ class _PageReportState extends State<PageReport> {
                 ],
               ),
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     child: const Text("Content"),
@@ -130,7 +133,6 @@ class _PageReportState extends State<PageReport> {
                 ],
               ),
               Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Container(
                     child: const Text("Format"),
@@ -151,9 +153,10 @@ class _PageReportState extends State<PageReport> {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
+                    margin: const EdgeInsets.only(left: 80),
                     child: TextButton(
                       child: const Text("Generate",
                           style: TextStyle(
@@ -223,18 +226,18 @@ class _PageReportState extends State<PageReport> {
   }
 
   _setDatesAccording(String? newValue) {
-    DateTime yesterday = _today.subtract(const Duration(days:1));
-    DateTime mondayThisWeek = DateTime(_today.year, _today.month,
-        _today.day - _today.weekday + 1);
-    DateTime sundayLastWeek = mondayThisWeek.subtract(const Duration(days:1));
-    DateTime mondayLastWeek = mondayThisWeek.subtract(const Duration(days:7));
+    DateTime yesterday = _today.subtract(const Duration(days: 1));
+    DateTime mondayThisWeek =
+        DateTime(_today.year, _today.month, _today.day - _today.weekday + 1);
+    DateTime sundayLastWeek = mondayThisWeek.subtract(const Duration(days: 1));
+    DateTime mondayLastWeek = mondayThisWeek.subtract(const Duration(days: 7));
 
     //Setting default values
     DateTime newStart = mondayLastWeek;
     DateTime newEnd = sundayLastWeek;
     String periodSelected = lastWeekPeriod;
 
-    switch(newValue){
+    switch (newValue) {
       case thisWeekPeriod:
         newStart = mondayThisWeek;
         newEnd = _today;
