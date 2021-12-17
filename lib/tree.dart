@@ -4,7 +4,7 @@
 import 'package:intl/intl.dart';
 import 'dart:convert' as convert;
 
-final DateFormat _dateFormatter = DateFormat("yyyy-MM-dd HH:mm:ss");
+final DateFormat _dateFormatter = DateFormat("yyyy-MM-ddTHH:mm:ss");
 
 abstract class Activity {
   int id;
@@ -20,17 +20,17 @@ abstract class Activity {
   Activity.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         name = json['name'],
-        initialDate = json['initialDate'] == null ? null : _dateFormatter.parse(json['initialDate']),
-        finalDate = json['finalDate'] == null ? null : _dateFormatter.parse(json['finalDate']),
-        duration = json['duration'];
+        initialDate = json['startDateTime'] == null ? null : _dateFormatter.parse(json['startDateTime']),
+        finalDate = json['endDateTime'] == null ? null : _dateFormatter.parse(json['endDateTime']),
+        duration = json['totalTime'];
 }
 
 
 class Project extends Activity {
   Project.fromJson(Map<String, dynamic> json) : super.fromJson(json) {
-    if (json.containsKey('activities')) {
+    if (json.containsKey('childList')) {
       // json has only 1 level because depth=1 or 0 in time_tracker
-      for (Map<String, dynamic> jsonChild in json['activities']) {
+      for (Map<String, dynamic> jsonChild in json['childList']) {
         if (jsonChild['class'] == "project") {
           children.add(Project.fromJson(jsonChild));
           // condition on key avoids infinite recursion
@@ -58,16 +58,14 @@ class Task extends Activity {
 
 
 class Interval {
-  int id;
   DateTime? initialDate;
   DateTime? finalDate;
   int duration;
   bool active;
 
   Interval.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        initialDate = json['initialDate'] == null ? null : _dateFormatter.parse(json['initialDate']),
-        finalDate = json['finalDate'] == null ? null : _dateFormatter.parse(json['finalDate']),
+      : initialDate = json['initialTime'] == null ? null : _dateFormatter.parse(json['initialTime']),
+        finalDate = json['finalTime'] == null ? null : _dateFormatter.parse(json['finalTime']),
         duration = json['duration'],
         active = json['active'];
 }
