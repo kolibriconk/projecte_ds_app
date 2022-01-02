@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:codelab_timetracker/floating_action_button.dart';
 import 'package:codelab_timetracker/page_intervals.dart';
-import 'package:codelab_timetracker/page_report.dart';
 import 'package:codelab_timetracker/tree.dart' hide getTree;
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/requests.dart';
@@ -11,7 +8,7 @@ import 'dart:async';
 class PageActivities extends StatefulWidget {
   final int id;
 
-  PageActivities(this.id);
+  const PageActivities(this.id, {Key? key}) : super(key: key);
 
   @override
   _PageActivitiesState createState() => _PageActivitiesState();
@@ -22,12 +19,16 @@ class _PageActivitiesState extends State<PageActivities> {
   late Future<Tree> futureTree;
 
   late Timer _timer;
-  static const int periodeRefresh = 6;
+  static const int periodRefresh = 6;
+
+  TextEditingController nameController = TextEditingController();
+  late List<String> tagList;
 
   @override
   void initState() {
     super.initState();
     id = widget.id;
+    tagList = [];
     futureTree = getTree(id);
     _activateTimer();
   }
@@ -45,16 +46,15 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name),
               actions: <Widget>[
                 IconButton(
-                    icon: Icon(Icons.home),
+                    icon: const Icon(Icons.home),
                     onPressed: () {
                       while (Navigator.of(context).canPop()) {
-                        print("pop");
                         Navigator.of(context).pop();
                       }
                       /* this works also:
     Navigator.popUntil(context, ModalRoute.withName('/'));
   */
-                      PageActivities(0);
+                      const PageActivities(0);
                     }),
                 //TODO other actions
               ],
@@ -75,12 +75,32 @@ class _PageActivitiesState extends State<PageActivities> {
                   onPressed: () => showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Pulsado crear proyecto'),
-                      content: const Text('Crear proyect...'),
+                      title: const Text('Nuevo proyecto'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Nombre",
+                            ),
+                          ),
+                          //TODO: Añadir los tags aqui i usar la variable tagList ya creada!!!
+                        ],
+                      ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: const Text('OK'),
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancelar'),
+                        ),
+                        TextButton(
+                          onPressed: () => {
+                            addActivity(nameController.text, id, true, tagList),
+                            Navigator.pop(context, 'Cancel'),
+                            _refresh(),
+                          },
+                          child: const Text('Añadir'),
                         ),
                       ],
                     ),
@@ -91,12 +111,33 @@ class _PageActivitiesState extends State<PageActivities> {
                   onPressed: () => showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Pulsado crear tarea'),
-                      content: const Text('Crear tarea...'),
+                      title: const Text('Nueva tarea'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Nombre",
+                            ),
+                          ),
+                          //TODO: Añadir los tags aqui i usar la variable tagList ya creada!!!
+                        ],
+                      ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context, 'OK'),
-                          child: const Text('OK'),
+                          onPressed: () => Navigator.pop(context, 'Cancel'),
+                          child: const Text('Cancelar'),
+                        ),
+                        TextButton(
+                          onPressed: () => {
+                            addActivity(
+                                nameController.text, id, false, tagList),
+                            Navigator.pop(context, 'Cancel'),
+                            _refresh(),
+                          },
+                          child: const Text('Añadir'),
                         ),
                       ],
                     ),
@@ -113,7 +154,7 @@ class _PageActivitiesState extends State<PageActivities> {
         return Container(
             height: MediaQuery.of(context).size.height,
             color: Colors.white,
-            child: Center(
+            child: const Center(
               child: CircularProgressIndicator(),
             ));
       },
@@ -126,19 +167,19 @@ class _PageActivitiesState extends State<PageActivities> {
     // split by '.' and taking first element of resulting list removes the microseconds part
     if (activity is Project) {
       return ListTile(
-        leading: Icon(Icons.folder),
-        title: Text('${activity.name}'),
-        trailing: Text('$strDuration'),
+        leading: const Icon(Icons.folder),
+        title: Text(activity.name),
+        trailing: Text(strDuration),
         onTap: () => _navigateDownActivities(activity.id),
       );
     } else if (activity is Task) {
-      Task task = activity as Task;
+      Task task = activity;
       // at the moment is the same, maybe changes in the future
       //Widget trailing = Text('$strDuration');
       Widget trailing = Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('$strDuration'),
+          Text(strDuration),
           IconButton(
               onPressed: () {
                 if (task.active) {
@@ -155,8 +196,8 @@ class _PageActivitiesState extends State<PageActivities> {
         ],
       );
       return ListTile(
-        leading: Icon(Icons.assignment),
-        title: Text('${activity.name}'),
+        leading: const Icon(Icons.assignment),
+        title: Text(activity.name),
         trailing: trailing,
         onTap: () => _navigateDownIntervals(activity.id),
       );
@@ -197,7 +238,7 @@ class _PageActivitiesState extends State<PageActivities> {
   }
 
   void _activateTimer() {
-    _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
+    _timer = Timer.periodic(const Duration(seconds: periodRefresh), (Timer t) {
       futureTree = getTree(id);
       setState(() {});
     });

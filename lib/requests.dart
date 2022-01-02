@@ -60,3 +60,19 @@ Future<void> stop(int id) async {
     throw Exception('Failed to get children');
   }
 }
+
+Future<bool> addActivity(
+    String name, int parentId, bool isProject, List<String> tagList) async {
+  var tagListString = tagList.join(",");
+  var uri = Uri.parse(
+      "$baseUrl/addActivity?$name&$parentId&$isProject&$tagListString");
+  final response = await client.get(uri);
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+    Map<String, dynamic> decoded = convert.jsonDecode(response.body);
+    return decoded['added'];
+  } else {
+    print("statusCode=$response.statusCode");
+    return false;
+  }
+}
