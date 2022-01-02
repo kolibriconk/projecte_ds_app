@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:codelab_timetracker/floating_action_button.dart';
 import 'package:codelab_timetracker/page_intervals.dart';
 import 'package:codelab_timetracker/page_report.dart';
 import 'package:codelab_timetracker/tree.dart' hide getTree;
@@ -63,6 +66,43 @@ class _PageActivitiesState extends State<PageActivities> {
                   _buildRow(snapshot.data!.root.children[index], index),
               separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
+            ),
+            floatingActionButton: ExpandableFab(
+              distance: 60.0,
+              children: [
+                ActionButton(
+                  onPressed: () => showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Pulsado crear proyecto'),
+                      content: const Text('Crear proyect...'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  ),
+                    icon: const Icon(Icons.folder),
+                ),
+                ActionButton(
+                  onPressed: () => showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title: const Text('Pulsado crear tarea'),
+                      content: const Text('Crear tarea...'),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, 'OK'),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  icon: const Icon(Icons.assignment),
+                ),
+              ],
             ),
           );
         } else if (snapshot.hasError) {
