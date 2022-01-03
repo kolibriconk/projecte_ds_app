@@ -2,6 +2,7 @@ import 'package:codelab_timetracker/page_activities.dart';
 import 'package:codelab_timetracker/page_intervals.dart';
 import 'package:flutter/material.dart';
 
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {

@@ -56,15 +56,38 @@ class _PageIntervalsState extends State<PageIntervals> {
                     }),
               ],
             ),
-            body: ListView.separated(
-              // it's like ListView.builder() but better because it includes a separator between items
-              padding: const EdgeInsets.all(16.0),
-              itemCount: numChildren,
-              itemBuilder: (BuildContext context, int index) =>
-                  _buildRow(snapshot.data!.root.children[index], index),
-              separatorBuilder: (BuildContext context, int index) =>
-              const Divider(),
-            ),
+            body: Column(
+              children: <Widget>[
+                Expanded( //        <-- Use Expanded
+                  child: ListView.separated(
+                    // it's like ListView.builder() but better because it includes a separator between items
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: numChildren,
+                    itemBuilder: (BuildContext context, int index) =>
+                        _buildRow(snapshot.data!.root.children[index], index),
+                    separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
+
+                  ),
+                ),
+                const Divider(
+                  height: 1,
+                  thickness: 2,
+                  color: Colors.black,),
+                Expanded(
+                  child: ListView.separated(
+                  // it's like ListView.builder() but better because it includes a separator between items
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: snapshot.data!.root.tagList.length,
+                  itemBuilder: (BuildContext context, int index) =>
+                      _buildTags(snapshot.data!.root.tagList[index]),
+                  separatorBuilder: (BuildContext context, int index) =>
+                  const Divider(),
+
+                ),),
+              ],
+            )
+
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
@@ -94,6 +117,11 @@ class _PageIntervalsState extends State<PageIntervals> {
     );
   }
 
+  Widget _buildTags(String tag) {
+    return ListTile(
+      title: Text(tag),
+    );
+  }
   void _activateTimer() {
     _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
       futureTree = getTree(id);

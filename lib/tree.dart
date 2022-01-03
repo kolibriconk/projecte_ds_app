@@ -13,6 +13,7 @@ abstract class Activity {
   DateTime? finalDate;
   int duration;
   List<dynamic> children = List<dynamic>.empty(growable: true);
+  List<String> tagList = List<String>.empty(growable: true);
 
   // formerly List<dynamic>(); but now because of null safety it has to be
   // initialized like that
@@ -23,6 +24,7 @@ abstract class Activity {
         initialDate = json['startDateTime'] == null ? null : _dateFormatter.parse(json['startDateTime']),
         finalDate = json['endDateTime'] == null ? null : _dateFormatter.parse(json['endDateTime']),
         duration = json['totalTime'];
+
 }
 
 
@@ -41,6 +43,12 @@ class Project extends Activity {
         }
       }
     }
+    if (json.containsKey('tagList')) {
+      // json has only 1 level because depth=1 or 0 in time_tracker
+      for (String jsonChild in json['tagList']) {
+        tagList.add(jsonChild);
+      }
+    }
   }
 }
 
@@ -53,7 +61,14 @@ class Task extends Activity {
     for (Map<String, dynamic> jsonChild in json['intervals']) {
       children.add(Interval.fromJson(jsonChild));
     }
+    if (json.containsKey('tagList')) {
+      // json has only 1 level because depth=1 or 0 in time_tracker
+      for (String jsonChild in json['tagList']) {
+        tagList.add(jsonChild);
+      }
+    }
   }
+
 }
 
 

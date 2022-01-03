@@ -86,6 +86,7 @@ class _PageActivitiesState extends State<PageActivities> {
                               labelText: "Nombre",
                             ),
                           ),
+
                           //TODO: Añadir los tags aqui i usar la variable tagList ya creada!!!
                         ],
                       ),
