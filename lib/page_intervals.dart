@@ -43,6 +43,38 @@ class _PageIntervalsState extends State<PageIntervals> {
             appBar: AppBar(
               title: Text(snapshot.data!.root.name),
               actions: <Widget>[
+                IconButton(
+                  onPressed: (){
+                    //TODO: Funcionalidad de editar
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text('Tarea: ${snapshot.data!.root.name}'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text("Tags:"),
+                              const SizedBox(height: 20),
+                              Text(snapshot.data!.root.tagList.join(",") == ""
+                                  ? "Sin tags"
+                                  : snapshot.data!.root.tagList.join(",")),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: const Text('Cerrar'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.info)),
                 IconButton(icon: Icon(Icons.home),
                     onPressed: () {
                       while(Navigator.of(context).canPop()) {
@@ -52,7 +84,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                       /* this works also:
     Navigator.popUntil(context, ModalRoute.withName('/'));
   */
-                      PageActivities(0);
+                      PageActivities(0, "");
                     }),
               ],
             ),

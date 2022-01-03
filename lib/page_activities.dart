@@ -7,8 +7,9 @@ import 'dart:async';
 
 class PageActivities extends StatefulWidget {
   final int id;
+  final String tagList;
 
-  const PageActivities(this.id, {Key? key}) : super(key: key);
+  const PageActivities(this.id, this.tagList, {Key? key}) : super(key: key);
 
   @override
   _PageActivitiesState createState() => _PageActivitiesState();
@@ -16,19 +17,20 @@ class PageActivities extends StatefulWidget {
 
 class _PageActivitiesState extends State<PageActivities> {
   late int id;
+  late String tagList;
   late Future<Tree> futureTree;
 
   late Timer _timer;
   static const int periodRefresh = 6;
 
   TextEditingController nameController = TextEditingController();
-  late List<String> tagList;
+  TextEditingController tagController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     id = widget.id;
-    tagList = [];
+    tagList = widget.tagList;
     futureTree = getTree(id);
     _activateTimer();
   }
@@ -46,17 +48,51 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name),
               actions: <Widget>[
                 IconButton(
+                    onPressed: (){
+                      //TODO: Funcionalidad de buscar
+                    },
+                    icon: const Icon(Icons.search),
+                ),
+                IconButton(
+                  onPressed: (){
+                    //TODO: Funcionalidad de editar
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+                IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text('Proyecto: ${snapshot.data!.root.name}'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text("Tags:"),
+                              const SizedBox(height: 20),
+                              Text(snapshot.data!.root.tagList.join(",") == ""
+                                  ? "Sin tags"
+                                  : snapshot.data!.root.tagList.join(",")),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: const Text('Cerrar'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.info)),
+                IconButton(
                     icon: const Icon(Icons.home),
                     onPressed: () {
                       while (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
                       }
-                      /* this works also:
-    Navigator.popUntil(context, ModalRoute.withName('/'));
-  */
-                      const PageActivities(0);
+                      PageActivities(0, snapshot.data!.root.tagList.join(","));
                     }),
-                //TODO other actions
               ],
             ),
             body: ListView.separated(
@@ -86,8 +122,14 @@ class _PageActivitiesState extends State<PageActivities> {
                               labelText: "Nombre",
                             ),
                           ),
-
-                          //TODO: Añadir los tags aqui i usar la variable tagList ya creada!!!
+                          const SizedBox(height: 20),
+                          TextField(
+                            controller: tagController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Tags (Separados por coma)",
+                            ),
+                          ),
                         ],
                       ),
                       actions: <Widget>[
@@ -97,8 +139,11 @@ class _PageActivitiesState extends State<PageActivities> {
                         ),
                         TextButton(
                           onPressed: () => {
-                            addActivity(nameController.text, id, true, tagList),
+                            addActivity(nameController.text, id, true,
+                                tagController.text),
                             Navigator.pop(context, 'Cancel'),
+                            nameController.text = "",
+                            tagController.text = "",
                             _refresh(),
                           },
                           child: const Text('Añadir'),
@@ -123,7 +168,14 @@ class _PageActivitiesState extends State<PageActivities> {
                               labelText: "Nombre",
                             ),
                           ),
-                          //TODO: Añadir los tags aqui i usar la variable tagList ya creada!!!
+                          const SizedBox(height: 20),
+                          TextField(
+                            controller: tagController,
+                            decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Tags (Separados por coma)",
+                            ),
+                          ),
                         ],
                       ),
                       actions: <Widget>[
@@ -133,9 +185,11 @@ class _PageActivitiesState extends State<PageActivities> {
                         ),
                         TextButton(
                           onPressed: () => {
-                            addActivity(
-                                nameController.text, id, false, tagList),
+                            addActivity(nameController.text, id, false,
+                                tagController.text),
                             Navigator.pop(context, 'Cancel'),
+                            nameController.text = "",
+                            tagController.text = "",
                             _refresh(),
                           },
                           child: const Text('Añadir'),
@@ -171,7 +225,8 @@ class _PageActivitiesState extends State<PageActivities> {
         leading: const Icon(Icons.folder),
         title: Text(activity.name),
         trailing: Text(strDuration),
-        onTap: () => _navigateDownActivities(activity.id),
+        onTap: () =>
+            _navigateDownActivities(activity.id, activity.tagList.join(",")),
       );
     } else if (activity is Task) {
       Task task = activity;
@@ -209,11 +264,11 @@ class _PageActivitiesState extends State<PageActivities> {
     }
   }
 
-  void _navigateDownActivities(int childId) {
+  void _navigateDownActivities(int childId, String tags) {
     // we can not do just _refresh() because then the up arrow doesn't appear in the appbar
     Navigator.of(context)
         .push(MaterialPageRoute<void>(
-      builder: (context) => PageActivities(childId),
+      builder: (context) => PageActivities(childId, tags),
     ))
         .then((var value) {
       _activateTimer();
