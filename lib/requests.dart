@@ -63,8 +63,8 @@ Future<void> stop(int id) async {
 
 Future<bool> addActivity(
     String name, int parentId, bool isProject, String tagList) async {
-  var uri = Uri.parse(
-      "$baseUrl/addActivity?$name&$parentId&$isProject&$tagList");
+  var uri =
+      Uri.parse("$baseUrl/addActivity?$name&$parentId&$isProject&$tagList");
   final response = await client.get(uri);
   if (response.statusCode == 200) {
     print("statusCode=$response.statusCode");
