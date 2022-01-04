@@ -88,8 +88,41 @@ class _PageIntervalsState extends State<PageIntervals> {
                     }),
               ],
             ),
-            body: Column(
+            body:
+            Column(
               children: <Widget>[
+                _buildInfo(snapshot.data!.root),
+                Row(
+
+                  children: const [
+                    SizedBox(
+                      width: 20,
+                    )
+                    ,
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text("Tags:", style: TextStyle(fontSize: 20)),
+                    ),
+                  ]
+                ),
+                const Divider(color: Colors.black,),
+                Expanded(
+                  child: ListView.separated(
+                    // it's like ListView.builder() but better because it includes a separator between items
+                    padding: const EdgeInsets.all(16.0),
+                    itemCount: snapshot.data!.root.tagList.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        _buildTags(snapshot.data!.root.tagList[index]),
+                    separatorBuilder: (BuildContext context, int index) =>
+                    const Divider(),
+
+                  ),
+                ),
+                const Divider(
+                  height: 1,
+                  thickness: 2,
+                  color: Colors.black,),
+
                 Expanded( //        <-- Use Expanded
                   child: ListView.separated(
                     // it's like ListView.builder() but better because it includes a separator between items
@@ -102,21 +135,6 @@ class _PageIntervalsState extends State<PageIntervals> {
 
                   ),
                 ),
-                const Divider(
-                  height: 1,
-                  thickness: 2,
-                  color: Colors.black,),
-                Expanded(
-                  child: ListView.separated(
-                  // it's like ListView.builder() but better because it includes a separator between items
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: snapshot.data!.root.tagList.length,
-                  itemBuilder: (BuildContext context, int index) =>
-                      _buildTags(snapshot.data!.root.tagList[index]),
-                  separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-
-                ),),
               ],
             )
 
@@ -135,6 +153,88 @@ class _PageIntervalsState extends State<PageIntervals> {
     );
   }
 
+  Widget _buildInfo(Tree.Activity task) {
+  String strDuration =
+  Duration(seconds: task.duration).toString().split('.').first;
+    String strInitialDate = task.initialDate.toString().split('.')[0];
+    // this removes the microseconds part
+    String strFinalDate = task.finalDate.toString().split('.')[0];
+    return Column(
+      children: [
+        const Divider(
+          thickness: 20,
+          color: Colors.white,
+        ),
+        Align(
+            alignment: Alignment.topLeft,
+            child:
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    const Divider(),
+                    const Icon(Icons.access_time_outlined),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text('Temps total $strDuration', textAlign: TextAlign.left, overflow: TextOverflow.visible)
+                    ],
+                  )
+             ),
+        const Divider(
+        ),
+        Align(
+            alignment: Alignment.topLeft,
+            child:
+                Row(
+                  children: [
+                  const SizedBox(
+                  width: 20,
+                  ),
+                  const Divider(),
+                  const Icon(Icons.access_time_outlined),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                    Flexible(
+                        child: Text('Primer inici ${strInitialDate} ', textAlign: TextAlign.left, overflow: TextOverflow.visible)
+                    )
+                  ]
+                      ,
+                )
+        ),
+        const Divider(
+
+        ),
+        Align(
+            alignment: Alignment.topLeft,
+            child:
+                Row(
+                  children: [
+                  const SizedBox(
+                  width: 20,
+                  ),
+                  const Divider(),
+                  const Icon(Icons.access_time_outlined),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Flexible(
+                        child: Text('Ultima activitat ${strFinalDate}', textAlign: TextAlign.left, overflow: TextOverflow.visible)
+                    )
+                  ],
+            )
+        ),
+        const Divider(
+
+        ),
+
+
+    ],
+
+    );
+  }
   Widget _buildRow(Tree.Interval interval, int index) {
     String strDuration = Duration(seconds: interval.duration)
         .toString()
