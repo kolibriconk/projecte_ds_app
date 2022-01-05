@@ -102,6 +102,23 @@ class Tree {
   }
 }
 
+class ActivityList {
+  late List<Activity> matchingList = [];
+
+  ActivityList(List<dynamic> dec) {
+    dec.forEach((element) {
+      Map<String, dynamic> elementMapped = convert.jsonDecode(element);
+      if(elementMapped['class'] == "project"){
+        matchingList.add(Project.fromJson(elementMapped));
+      }else if(elementMapped['class'] == "task"){
+        matchingList.add(Task.fromJson(elementMapped));
+      }else {
+        assert(false, "neither project or task");
+      }
+    });
+  }
+}
+
 
 Tree getTree() {
   String strJson = "{"

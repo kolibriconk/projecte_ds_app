@@ -1,10 +1,10 @@
 import 'package:codelab_timetracker/floating_action_button.dart';
 import 'package:codelab_timetracker/page_intervals.dart';
+import 'package:codelab_timetracker/page_search_result.dart';
 import 'package:codelab_timetracker/tree.dart' hide getTree;
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/requests.dart';
 import 'dart:async';
-import 'package:codelab_timetracker/search_bar.dart'; //PAU
 
 class PageActivities extends StatefulWidget {
   final int id;
@@ -24,8 +24,9 @@ class _PageActivitiesState extends State<PageActivities> {
   late Timer _timer;
   static const int periodRefresh = 6;
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController tagController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
+  final TextEditingController _filterController = TextEditingController();
 
   @override
   void initState() {
@@ -49,15 +50,42 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name),
               actions: <Widget>[
                 IconButton(
-                    onPressed: (){
-                      //TODO: Funcionalidad de buscar
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SearchBar(snapshot.data!.root.tagList)),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: const Text('Busqueda por tag'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: _filterController,
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: "Tag a buscar",
+                                ),
+                              )
+                            ],
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, 'Cancel'),
+                              child: const Text('Cancelar'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if(_filterController.text != ""){
+                                  Navigator.pop(context, 'Cancel');
+                                  _navigateToResultSearch(_filterController.text);
+                                }
+                              },
+                              child: const Text('Buscar'),
+                            ),
+                          ],
+                        ),
                       );
                     },
-                    icon: const Icon(Icons.search),
-                ),
+                    icon: const Icon(Icons.search)),
                 IconButton(
                   onPressed: (){
                     //TODO: Funcionalidad de editar
@@ -121,7 +149,7 @@ class _PageActivitiesState extends State<PageActivities> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
-                            controller: nameController,
+                            controller: _nameController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: "Nombre",
@@ -129,7 +157,7 @@ class _PageActivitiesState extends State<PageActivities> {
                           ),
                           const SizedBox(height: 20),
                           TextField(
-                            controller: tagController,
+                            controller: _tagController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: "Tags (Separados por coma)",
@@ -144,11 +172,11 @@ class _PageActivitiesState extends State<PageActivities> {
                         ),
                         TextButton(
                           onPressed: () => {
-                            addActivity(nameController.text, id, true,
-                                tagController.text),
+                            addActivity(_nameController.text, id, true,
+                                _tagController.text),
                             Navigator.pop(context, 'Cancel'),
-                            nameController.text = "",
-                            tagController.text = "",
+                            _nameController.text = "",
+                            _tagController.text = "",
                             _refresh(),
                           },
                           child: const Text('Añadir'),
@@ -167,7 +195,7 @@ class _PageActivitiesState extends State<PageActivities> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
-                            controller: nameController,
+                            controller: _nameController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: "Nombre",
@@ -175,7 +203,7 @@ class _PageActivitiesState extends State<PageActivities> {
                           ),
                           const SizedBox(height: 20),
                           TextField(
-                            controller: tagController,
+                            controller: _tagController,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               labelText: "Tags (Separados por coma)",
@@ -190,11 +218,11 @@ class _PageActivitiesState extends State<PageActivities> {
                         ),
                         TextButton(
                           onPressed: () => {
-                            addActivity(nameController.text, id, false,
-                                tagController.text),
+                            addActivity(_nameController.text, id, false,
+                                _tagController.text),
                             Navigator.pop(context, 'Cancel'),
-                            nameController.text = "",
-                            tagController.text = "",
+                            _nameController.text = "",
+                            _tagController.text = "",
                             _refresh(),
                           },
                           child: const Text('Añadir'),
@@ -293,6 +321,13 @@ class _PageActivitiesState extends State<PageActivities> {
     //https://stackoverflow.com/questions/49830553/how-to-go-back-and-refresh-the-previous-page-in-flutter?noredirect=1&lq=1
   }
 
+  void _navigateToResultSearch(String text) {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(
+      builder: (context) => PageSearchResult(text),
+    ));
+  }
+
   void _refresh() async {
     futureTree = getTree(id); // to be used in build()
     setState(() {});
@@ -312,4 +347,6 @@ class _PageActivitiesState extends State<PageActivities> {
     _timer.cancel();
     super.dispose();
   }
+
+
 }

@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'tree.dart';
 
@@ -6,7 +7,7 @@ final http.Client client = http.Client();
 // better than http.get() if multiple requests to the same server
 
 // If you connect the Android emulator to the webserver listening to localhost:8080
-//const String baseUrl = "http://192.168.1.10:8080"; // Para Jose
+//const String baseUrl = "http://192.168.1.137:8080"; // Para Jose
 const String baseUrl = "http://localhost:8080";
 
 // If instead you want to use a real phone, you need ngrok to redirect
@@ -73,5 +74,20 @@ Future<bool> addActivity(
   } else {
     print("statusCode=$response.statusCode");
     return false;
+  }
+}
+
+Future<ActivityList> retrieveActivityList(String tagToSearch) async {
+  var uri =
+  Uri.parse("$baseUrl/searchByTag?$tagToSearch");
+  final response = await client.get(uri);
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+    List<dynamic> decoded = convert.jsonDecode(response.body);
+    print(decoded.toString());
+    return ActivityList(decoded);
+  } else {
+    print("statusCode=$response.statusCode");
+    throw Exception("Connection error");
   }
 }
