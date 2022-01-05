@@ -3,6 +3,7 @@ import 'package:codelab_timetracker/page_intervals.dart';
 import 'package:codelab_timetracker/tree.dart' hide getTree;
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/requests.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 
 class PageSearchResult extends StatefulWidget {
@@ -40,7 +41,7 @@ class _PageSearchResultState extends State<PageSearchResult> {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text("Resultado de brusqueda"),
+              title: Text(AppLocalizations.of(context)!.searchResult),
             ),
             body: ListView.separated(
               // it's like ListView.builder() but better because it includes a separator between items
@@ -95,7 +96,7 @@ class _PageSearchResultState extends State<PageSearchResult> {
         onTap: () => _navigateDownIntervals(activity.id),
       );
     } else {
-      throw (Exception("Activity that is neither a Task or a Project"));
+      throw (Exception("Activity that is neither a Task or a Project")); //TODO EXCEPTION
       // this solves the problem of return Widget is not nullable because an
       // Exception is also a Widget?
     }

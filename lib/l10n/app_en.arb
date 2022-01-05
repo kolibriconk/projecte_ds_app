@@ -1,0 +1,24 @@
+{
+  "appTitle": "TimeTracker",
+  "project": "Project",
+  "tags": "Tags",
+  "noTags": "No tags",
+  "close": "Close",
+  "cancel": "Cancel",
+  "newProject": "New Project",
+  "newTask": "New Task",
+  "name": "Name",
+  "tagLabelText": "Tags (Separated by commas)",
+  "add": "Add",
+  "task": "Task",
+  "firstTime": "First time",
+  "totalTime": "Total time",
+  "lastActivity" : "Last activity",
+  "textTag": "Search for tag",
+  "textFiledTag": "Tag to seek",
+  "search" : "Search",
+  "searchResult" : "Search result"
+
+
+
+}

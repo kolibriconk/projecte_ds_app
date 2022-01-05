@@ -1,0 +1,22 @@
+{
+  "appTitle" : "Rastreador de tiempo",
+  "project" : "Proyecto",
+  "tags" : "Etiquetas",
+  "noTags": "Sin tags",
+  "close": "Cerrar",
+  "cancel": "Cancelar",
+  "newProject": "Nuevo Proyecto",
+  "newTask": "Nueva Tarea",
+  "name": "Nombre",
+  "tagLabelText": "Tags (Separados por coma)",
+  "add": "Añadir",
+  "task": "Tarea",
+  "firstTime": "Primer inicio",
+  "totalTime": "Tiempo total",
+  "lastActivity" : "Última actividad",
+  "textTag": "Busqueda por etiqueta",
+  "textFiledTag": "Etiqueta a buscar",
+  "search" : "Buscar",
+  "searchResult" : "Resultat de la cerca"
+
+}

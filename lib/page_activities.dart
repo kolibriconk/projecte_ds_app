@@ -4,6 +4,7 @@ import 'package:codelab_timetracker/page_search_result.dart';
 import 'package:codelab_timetracker/tree.dart' hide getTree;
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/requests.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 
 class PageActivities extends StatefulWidget {
@@ -61,21 +62,21 @@ class _PageActivitiesState extends State<PageActivities> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
-                          title: Text('Proyecto: ${snapshot.data!.root.name}'),
+                          title: Text(AppLocalizations.of(context)!.project+' : '+snapshot.data!.root.name),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text("Tags:"),
+                              Text(AppLocalizations.of(context)!.tags+' : '),
                               const SizedBox(height: 20),
                               Text(snapshot.data!.root.tagList.join(",") == ""
-                                  ? "Sin tags"
+                                  ? AppLocalizations.of(context)!.tags
                                   : snapshot.data!.root.tagList.join(",")),
                             ],
                           ),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cerrar'),
+                              onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                              child: Text(AppLocalizations.of(context)!.close),
                             ),
                           ],
                         ),
@@ -108,42 +109,42 @@ class _PageActivitiesState extends State<PageActivities> {
                   onPressed: () => showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Nuevo proyecto'),
+                      title: Text(AppLocalizations.of(context)!.newProject),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
                             controller: _nameController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: "Nombre",
+                              labelText: AppLocalizations.of(context)!.name,
                             ),
                           ),
                           const SizedBox(height: 20),
                           TextField(
                             controller: _tagController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: "Tags (Separados por coma)",
+                              labelText: AppLocalizations.of(context)!.tagLabelText,
                             ),
                           ),
                         ],
                       ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('Cancelar'),
+                          onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                          child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                         TextButton(
                           onPressed: () => {
                             addActivity(_nameController.text, id, true,
                                 _tagController.text),
-                            Navigator.pop(context, 'Cancel'),
+                            Navigator.pop(context, AppLocalizations.of(context)!.cancel),
                             _nameController.text = "",
                             _tagController.text = "",
                             _refresh(),
                           },
-                          child: const Text('Añadir'),
+                          child: Text(AppLocalizations.of(context)!.add),
                         ),
                       ],
                     ),
@@ -154,42 +155,42 @@ class _PageActivitiesState extends State<PageActivities> {
                   onPressed: () => showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                      title: const Text('Nueva tarea'),
+                      title: Text(AppLocalizations.of(context)!.newTask),
                       content: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextField(
                             controller: _nameController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: "Nombre",
+                              labelText: AppLocalizations.of(context)!.name,
                             ),
                           ),
                           const SizedBox(height: 20),
                           TextField(
                             controller: _tagController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: "Tags (Separados por coma)",
+                              labelText: AppLocalizations.of(context)!.tagLabelText,
                             ),
                           ),
                         ],
                       ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context, 'Cancel'),
-                          child: const Text('Cancelar'),
+                          onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                          child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                         TextButton(
                           onPressed: () => {
                             addActivity(_nameController.text, id, false,
                                 _tagController.text),
-                            Navigator.pop(context, 'Cancel'),
+                            Navigator.pop(context, AppLocalizations.of(context)!.cancel),
                             _nameController.text = "",
                             _tagController.text = "",
                             _refresh(),
                           },
-                          child: const Text('Añadir'),
+                          child: Text(AppLocalizations.of(context)!.add),
                         ),
                       ],
                     ),
@@ -222,32 +223,32 @@ class _PageActivitiesState extends State<PageActivities> {
               context: context,
               builder: (BuildContext context) =>
                   AlertDialog(
-                    title: const Text('Busqueda por tag'),
+                    title: Text(AppLocalizations.of(context)!.textTag),
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextField(
                           controller: _filterController,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: "Tag a buscar",
+                            labelText: AppLocalizations.of(context)!.textFiledTag,
                           ),
                         )
                       ],
                     ),
                     actions: <Widget>[
                       TextButton(
-                        onPressed: () => Navigator.pop(context, 'Cancel'),
-                        child: const Text('Cancelar'),
+                        onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                       TextButton(
                         onPressed: () {
                           if (_filterController.text != "") {
-                            Navigator.pop(context, 'Cancel');
+                            Navigator.pop(context, AppLocalizations.of(context)!.cancel);
                             _navigateToResultSearch(_filterController.text);
                           }
                         },
-                        child: const Text('Buscar'),
+                        child: Text(AppLocalizations.of(context)!.search),
                       ),
                     ],
                   ),
@@ -262,39 +263,38 @@ class _PageActivitiesState extends State<PageActivities> {
           context: context,
           builder: (BuildContext context) =>
               AlertDialog(
-                title: const Text('Busqueda por tag'),
+                title: Text(AppLocalizations.of(context)!.textTag),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     TextField(
                       controller: _filterController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: "Tag a buscar",
+                        labelText: AppLocalizations.of(context)!.textFiledTag,
                       ),
                     )
                   ],
                 ),
                 actions: <Widget>[
                   TextButton(
-                    onPressed: () => Navigator.pop(context, 'Cancel'),
-                    child: const Text('Cancelar'),
+                    onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                   TextButton(
                     onPressed: () {
                       if (_filterController.text != "") {
-                        Navigator.pop(context, 'Cancel');
+                        Navigator.pop(context, AppLocalizations.of(context)!.cancel);
                         _navigateToResultSearchChilds(_filterController.text);
                       }
                     },
-                    child: const Text('Buscar'),
+                    child: Text(AppLocalizations.of(context)!.search),
                   ),
                 ],
               ),
         );
       }, icon: const Icon(Icons.search));
     }
-
   }
 
   Widget _buildRow(Activity activity, int index) {
@@ -339,7 +339,7 @@ class _PageActivitiesState extends State<PageActivities> {
         onTap: () => _navigateDownIntervals(activity.id),
       );
     } else {
-      throw (Exception("Activity that is neither a Task or a Project"));
+      throw (Exception("Activity that is neither a Task or a Project")); //TODO EXCEPTION
       // this solves the problem of return Widget is not nullable because an
       // Exception is also a Widget?
     }

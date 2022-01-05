@@ -1,0 +1,21 @@
+{
+  "appTitle": "Rastrejador de Temps",
+  "project": "Projecte",
+  "tags": "Etiquetes",
+  "noTags": "Sense etiquetes",
+  "close": "Tancar",
+  "cancel": "Cancel·lar",
+  "newProject": "Nou Projecte",
+  "newTask": "Nova Tasca",
+  "name": "Nom",
+  "tagLabelText": "Etiquetes (Separats per coma)",
+  "add": "Afegir",
+  "task": "Tasca",
+  "firstTime": "Primer inici",
+  "totalTime": "Temps total",
+  "lastActivity" : "Última activitat",
+  "textTag": "Cerca per etiqueta",
+  "textFiledTag": "Etiqueta a cercar",
+  "search" : "Buscar",
+  "searchResult" : "Resultado de la búsqueda"
+}

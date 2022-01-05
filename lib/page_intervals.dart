@@ -6,6 +6,7 @@ import 'package:codelab_timetracker/tree.dart' as Tree hide getTree;
 
 // to avoid collision with an Interval class in another library
 import 'package:codelab_timetracker/requests.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'floating_action_button.dart';
 
@@ -59,21 +60,21 @@ class _PageIntervalsState extends State<PageIntervals> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
-                          title: Text('Tarea: ${task.name}'),
+                          title: Text(AppLocalizations.of(context)!.task+' : '+task.name),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text("Tags:"),
+                              Text(AppLocalizations.of(context)!.tags+" :"),
                               const SizedBox(height: 20),
                               Text(task.tagList.join(",") == ""
-                                  ? "Sin tags"
+                                  ? AppLocalizations.of(context)!.noTags
                                   : task.tagList.join(",")),
                             ],
                           ),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cerrar'),
+                              onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                              child: Text(AppLocalizations.of(context)!.close),
                             ),
                           ],
                         ),
@@ -97,13 +98,13 @@ class _PageIntervalsState extends State<PageIntervals> {
             body: Column(
               children: <Widget>[
                 _buildInfo(task),
-                Row(children: const [
+                Row(children: [
                   SizedBox(
                     width: 20,
                   ),
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text("Tags:", style: TextStyle(fontSize: 20)),
+                    child: Text(AppLocalizations.of(context)!.tags+" : ", style: TextStyle(fontSize: 20)),
                   ),
                 ]),
                 const Divider(
@@ -191,7 +192,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                 const SizedBox(
                   width: 10,
                 ),
-                Text('Temps total $strDuration',
+                Text(AppLocalizations.of(context)!.totalTime+' '+strDuration,
                     textAlign: TextAlign.left, overflow: TextOverflow.visible)
               ],
             )),
@@ -209,7 +210,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text('Primer inici ${strInitialDate} ',
+                    child: Text(AppLocalizations.of(context)!.firstTime + ' ' + strInitialDate,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -228,7 +229,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text('Ultima activitat ${strFinalDate}',
+                    child: Text(AppLocalizations.of(context)!.lastActivity+' '+strFinalDate,
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -245,7 +246,7 @@ class _PageIntervalsState extends State<PageIntervals> {
     // this removes the microseconds part
     String strFinalDate = interval.finalDate.toString().split('.')[0];
     return ListTile(
-      title: Text('from ${strInitialDate} to ${strFinalDate}'),
+      title: Text('from ${strInitialDate} to ${strFinalDate}'), //TODO DATE FORMAT
       trailing: Text('$strDuration'),
     );
   }
