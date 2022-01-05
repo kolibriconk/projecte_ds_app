@@ -304,8 +304,8 @@ class _PageActivitiesState extends State<PageActivities> {
       builder: (context) => PageActivities(childId, tags),
     ))
         .then((var value) {
-      _activateTimer();
-      _refresh();
+      //_activateTimer();
+      //_refresh();
     });
   }
 
@@ -315,8 +315,8 @@ class _PageActivitiesState extends State<PageActivities> {
       builder: (context) => PageIntervals(childId),
     ))
         .then((var value) {
-      _activateTimer();
-      _refresh();
+      //_activateTimer();
+      //_refresh();
     });
     //https://stackoverflow.com/questions/49830553/how-to-go-back-and-refresh-the-previous-page-in-flutter?noredirect=1&lq=1
   }

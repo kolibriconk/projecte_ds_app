@@ -23,7 +23,7 @@ class _PageIntervalsState extends State<PageIntervals> {
   late Future<Tree.Tree> futureTree;
 
   late Timer _timer;
-  static const int periodeRefresh = 2;
+  static const int periodeRefresh = 6;
 
   @override
   void initState() {
