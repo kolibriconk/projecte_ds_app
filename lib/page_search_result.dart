@@ -7,8 +7,9 @@ import 'dart:async';
 
 class PageSearchResult extends StatefulWidget {
   final String tagToSearch;
-
-  const PageSearchResult(this.tagToSearch, {Key? key}) : super(key: key);
+  final int option;
+  final int id;
+  const PageSearchResult(this.tagToSearch,this.option,this.id, {Key? key}) : super(key: key);
 
   @override
   _PageSearchResultState createState() => _PageSearchResultState();
@@ -20,7 +21,13 @@ class _PageSearchResultState extends State<PageSearchResult> {
   @override
   void initState() {
     super.initState();
-    futureActivityList = retrieveActivityList(widget.tagToSearch);
+    if(widget.option==0){
+      futureActivityList = retrieveActivityList(widget.tagToSearch);
+    }
+    else{
+      futureActivityList = retrieveActivityListChilds(widget.tagToSearch,widget.id);
+    }
+
   }
 
   @override

@@ -49,43 +49,7 @@ class _PageActivitiesState extends State<PageActivities> {
             appBar: AppBar(
               title: Text(snapshot.data!.root.name),
               actions: <Widget>[
-                IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) => AlertDialog(
-                          title: const Text('Busqueda por tag'),
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              TextField(
-                                controller: _filterController,
-                                decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: "Tag a buscar",
-                                ),
-                              )
-                            ],
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.pop(context, 'Cancel'),
-                              child: const Text('Cancelar'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                if(_filterController.text != ""){
-                                  Navigator.pop(context, 'Cancel');
-                                  _navigateToResultSearch(_filterController.text);
-                                }
-                              },
-                              child: const Text('Buscar'),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.search)),
+                _buildSearch(),
                 IconButton(
                   onPressed: (){
                     //TODO: Funcionalidad de editar
@@ -249,6 +213,90 @@ class _PageActivitiesState extends State<PageActivities> {
     );
   }
 
+  Widget _buildSearch(){
+
+    if(id==0) {
+      return IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) =>
+                  AlertDialog(
+                    title: const Text('Busqueda por tag'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextField(
+                          controller: _filterController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: "Tag a buscar",
+                          ),
+                        )
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, 'Cancel'),
+                        child: const Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if (_filterController.text != "") {
+                            Navigator.pop(context, 'Cancel');
+                            _navigateToResultSearch(_filterController.text);
+                          }
+                        },
+                        child: const Text('Buscar'),
+                      ),
+                    ],
+                  ),
+            );
+          },
+          icon: const Icon(Icons.search));
+    }
+    else{
+      return IconButton(
+          onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) =>
+              AlertDialog(
+                title: const Text('Busqueda por tag'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _filterController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Tag a buscar",
+                      ),
+                    )
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, 'Cancel'),
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (_filterController.text != "") {
+                        Navigator.pop(context, 'Cancel');
+                        _navigateToResultSearchChilds(_filterController.text);
+                      }
+                    },
+                    child: const Text('Buscar'),
+                  ),
+                ],
+              ),
+        );
+      }, icon: const Icon(Icons.search));
+    }
+
+  }
+
   Widget _buildRow(Activity activity, int index) {
     String strDuration =
         Duration(seconds: activity.duration).toString().split('.').first;
@@ -324,9 +372,16 @@ class _PageActivitiesState extends State<PageActivities> {
   void _navigateToResultSearch(String text) {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(
-      builder: (context) => PageSearchResult(text),
+      builder: (context) => PageSearchResult(text,0,0),
     ));
   }
+  void _navigateToResultSearchChilds(String text) {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(
+      builder: (context) => PageSearchResult(text,1,id),
+    ));
+  }
+
 
   void _refresh() async {
     futureTree = getTree(id); // to be used in build()

@@ -90,3 +90,19 @@ Future<ActivityList> retrieveActivityList(String tagToSearch) async {
     throw Exception("Connection error");
   }
 }
+
+Future<ActivityList> retrieveActivityListChilds(String tagToSearch,int id) async {
+  var uri =
+  Uri.parse("$baseUrl/searchByTagChilds?$tagToSearch&$id");
+  final response = await client.get(uri);
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+    List<dynamic> decoded = convert.jsonDecode(response.body);
+    print(decoded.toString());
+    return ActivityList(decoded);
+  } else {
+    print("statusCode=$response.statusCode");
+    throw Exception("Connection error");
+  }
+  "childrenschi";
+}
