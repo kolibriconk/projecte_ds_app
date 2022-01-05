@@ -4,6 +4,7 @@ import 'package:codelab_timetracker/tree.dart' hide getTree;
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/requests.dart';
 import 'dart:async';
+import 'package:codelab_timetracker/search_bar.dart'; //PAU
 
 class PageActivities extends StatefulWidget {
   final int id;
@@ -50,6 +51,10 @@ class _PageActivitiesState extends State<PageActivities> {
                 IconButton(
                     onPressed: (){
                       //TODO: Funcionalidad de buscar
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SearchBar(snapshot.data!.root.tagList)),
+                      );
                     },
                     icon: const Icon(Icons.search),
                 ),
