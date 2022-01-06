@@ -13,7 +13,7 @@ import 'floating_action_button.dart';
 class PageIntervals extends StatefulWidget {
   final int id;
 
-  PageIntervals(this.id);
+   const PageIntervals(this.id, {Key? key}) : super(key: key);
 
   @override
   _PageIntervalsState createState() => _PageIntervalsState();
