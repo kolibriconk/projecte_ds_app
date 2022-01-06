@@ -34,7 +34,7 @@ class _PageIntervalsState extends State<PageIntervals> {
   void initState() {
     super.initState();
     id = widget.id;
-    futureTree = getTree(id);
+    futureTree = getTree(id, 0);
     _activateTimer();
     initializeDateFormatting();
     dateFormat = DateFormat(Intl.systemLocale);
@@ -268,13 +268,13 @@ class _PageIntervalsState extends State<PageIntervals> {
   }
 
   void _refresh() async {
-    futureTree = getTree(id); // to be used in build()
+    futureTree = getTree(id, 0); // to be used in build()
     setState(() {});
   }
 
   void _activateTimer() {
     _timer = Timer.periodic(Duration(seconds: periodeRefresh), (Timer t) {
-      futureTree = getTree(id);
+      futureTree = getTree(id, 0);
       setState(() {});
     });
   }

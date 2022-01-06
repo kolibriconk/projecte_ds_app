@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       /*title: 'TimeTracker',*/
-      //locale: Locale('en'),
+      locale: const Locale('es'),
       onGenerateTitle: (context) =>
         AppLocalizations.of(context)!.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

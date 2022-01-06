@@ -19,8 +19,27 @@ const String baseUrl = "http://localhost:8080";
 // https://newbedev.com/how-can-i-access-my-localhost-from-my-android-device
 // look for "Portable solution with ngrok"
 
-Future<Tree> getTree(int id) async {
-  var uri = Uri.parse("$baseUrl/get_tree?$id");
+Future<Tree> getTree(int id, int option) async {
+  var uri = Uri.parse("$baseUrl/get_tree?$id&$option");
+  // see https://pub.dev/packages/http for examples of use
+  final response = await client.get(uri);
+  // response is NOT a Future because of await but since getTree() is async,
+  // execution continues (leaves this function) until response is available,
+  // and then we come back here
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+    print(response.body);
+    // If the server did return a 200 OK response, then parse the JSON.
+    Map<String, dynamic> decoded = convert.jsonDecode(response.body);
+    return Tree(decoded);
+  } else {
+    // If the server did not return a 200 OK response, then throw an exception.
+    print("statusCode=$response.statusCode");
+    throw Exception('Failed to get children');
+  }
+}
+Future<Tree> orderTree(int id,int option) async {
+  var uri = Uri.parse("$baseUrl/orderTree?$id,$option");
   // see https://pub.dev/packages/http for examples of use
   final response = await client.get(uri);
   // response is NOT a Future because of await but since getTree() is async,

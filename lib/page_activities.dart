@@ -24,7 +24,7 @@ class _PageActivitiesState extends State<PageActivities> {
   late int id;
   late String tagList;
   late Future<Tree> futureTree;
-
+  late int option;
   //late List<int> recentList;
 
   late Timer _timer;
@@ -39,9 +39,10 @@ class _PageActivitiesState extends State<PageActivities> {
     super.initState();
     id = widget.id;
     tagList = widget.tagList;
-    futureTree = getTree(id);
+    futureTree = getTree(id,0);
     //recentList = [];
     _activateTimer();
+    option = 0;
   }
 
   @override
@@ -125,6 +126,11 @@ class _PageActivitiesState extends State<PageActivities> {
                           //_refresh();
                         }),
                     icon: const Icon(Icons.shortcut)),
+                IconButton(
+                    onPressed: () {
+                        option = (option +1) % 3;
+                      },
+                    icon: const Icon(Icons.sort)),
                 IconButton(
                     onPressed: () {
                       showDialog(
@@ -470,13 +476,13 @@ class _PageActivitiesState extends State<PageActivities> {
   }
 
   void _refresh() async {
-    futureTree = getTree(id); // to be used in build()
+    futureTree = getTree(id, option); // to be used in build()
     setState(() {});
   }
 
   void _activateTimer() {
     _timer = Timer.periodic(const Duration(seconds: periodRefresh), (Timer t) {
-      futureTree = getTree(id);
+      futureTree = getTree(id, option);
       setState(() {});
     });
   }
