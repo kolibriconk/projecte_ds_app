@@ -17,5 +17,8 @@
   "textTag": "Cerca per etiqueta",
   "textFiledTag": "Etiqueta a cercar",
   "search" : "Buscar",
-  "searchResult" : "Resultado de la búsqueda"
+  "searchResult" : "Resultat de la cerca",
+  "from" : "Des de",
+  "to": "fins"
+
 }

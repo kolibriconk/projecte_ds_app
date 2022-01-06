@@ -7,6 +7,8 @@ import 'package:codelab_timetracker/tree.dart' as Tree hide getTree;
 // to avoid collision with an Interval class in another library
 import 'package:codelab_timetracker/requests.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'floating_action_button.dart';
 
@@ -26,12 +28,16 @@ class _PageIntervalsState extends State<PageIntervals> {
   late Timer _timer;
   static const int periodeRefresh = 6;
 
+  late DateFormat dateFormat;
+
   @override
   void initState() {
     super.initState();
     id = widget.id;
     futureTree = getTree(id);
     _activateTimer();
+    initializeDateFormatting();
+    dateFormat = DateFormat(Intl.systemLocale);
   }
 
   @override
@@ -210,7 +216,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.firstTime + ' ' + strInitialDate,
+                    child: Text(AppLocalizations.of(context)!.firstTime + ' ' + DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)),
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -229,7 +235,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.lastActivity+' '+strFinalDate,
+                    child: Text(AppLocalizations.of(context)!.lastActivity + ' '+ DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate)),
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -245,8 +251,12 @@ class _PageIntervalsState extends State<PageIntervals> {
     String strInitialDate = interval.initialDate.toString().split('.')[0];
     // this removes the microseconds part
     String strFinalDate = interval.finalDate.toString().split('.')[0];
+
     return ListTile(
-      title: Text('from ${strInitialDate} to ${strFinalDate}'), //TODO DATE FORMAT
+      title: Text(
+        AppLocalizations.of(context)!.from + ' ' + DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)) + ' ' +
+        AppLocalizations.of(context)!.to + ' ' +  DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate))
+          ),
       trailing: Text('$strDuration'),
     );
   }

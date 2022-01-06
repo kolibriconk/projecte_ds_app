@@ -14,9 +14,11 @@
   "firstTime": "Primer inicio",
   "totalTime": "Tiempo total",
   "lastActivity" : "Última actividad",
-  "textTag": "Busqueda por etiqueta",
+  "textTag": "Búsqueda por etiqueta",
   "textFiledTag": "Etiqueta a buscar",
   "search" : "Buscar",
-  "searchResult" : "Resultat de la cerca"
+  "searchResult" : "Resultado de la búsqueda",
+  "from" : "Desde",
+  "to": "hasta"
 
 }

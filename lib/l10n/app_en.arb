@@ -17,7 +17,9 @@
   "textTag": "Search for tag",
   "textFiledTag": "Tag to seek",
   "search" : "Search",
-  "searchResult" : "Search result"
+  "searchResult" : "Search result",
+  "from" : "from",
+  "to": "to"
 
 
 
