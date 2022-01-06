@@ -206,8 +206,11 @@ class _PageIntervalsState extends State<PageIntervals> {
     String strFinalDate = task.finalDate.toString().split('.')[0];
 
     if (strInitialDate == 'null') {
-      strInitialDate = DateTime.now().toString();
-      strFinalDate = DateTime.now().toString();
+      strInitialDate = AppLocalizations.of(context)!.noData;
+      strFinalDate = AppLocalizations.of(context)!.noData;
+    }else{
+      strInitialDate = DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate));
+      strFinalDate = DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate));
     }
 
     return Column(
@@ -246,7 +249,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.firstTime + ' ' + DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)),
+                    child: Text(AppLocalizations.of(context)!.firstTime + ' $strInitialDate',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -265,7 +268,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.lastActivity + ' '+ DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate)),
+                    child: Text(AppLocalizations.of(context)!.lastActivity + ' $strFinalDate',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
