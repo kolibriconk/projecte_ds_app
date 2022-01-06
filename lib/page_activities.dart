@@ -2,6 +2,7 @@ import 'package:codelab_timetracker/floating_action_button.dart';
 import 'package:codelab_timetracker/page_intervals.dart';
 import 'package:codelab_timetracker/page_recent.dart';
 import 'package:codelab_timetracker/page_search_result.dart';
+import 'package:codelab_timetracker/main.dart';
 import 'package:codelab_timetracker/tree.dart' hide getTree;
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/requests.dart';
@@ -22,7 +23,7 @@ class _PageActivitiesState extends State<PageActivities> {
   late int id;
   late String tagList;
   late Future<Tree> futureTree;
-  late List<Activity> recentList;
+  //late List<int> recentList;
 
   late Timer _timer;
   static const int periodRefresh = 6;
@@ -37,7 +38,7 @@ class _PageActivitiesState extends State<PageActivities> {
     id = widget.id;
     tagList = widget.tagList;
     futureTree = getTree(id);
-    recentList = [];
+    //recentList = [];
     _activateTimer();
   }
 
@@ -64,7 +65,7 @@ class _PageActivitiesState extends State<PageActivities> {
                     onPressed: () =>
                     Navigator.of(context)
                         .push(MaterialPageRoute<void>(
-                      builder: (context) => PageRecent(recentList,recentList.length),
+                      builder: (context) => PageRecent(MyApp.recentList,MyApp.recentList.length),
                     ))
                         .then((var value) {
                       //_activateTimer();
@@ -322,7 +323,9 @@ class _PageActivitiesState extends State<PageActivities> {
         trailing: Text(strDuration),
         onTap: () {
           _navigateDownActivities(activity.id, activity.tagList.join(","));
-          recentList.add(activity);
+          if(!MyApp.recentList.contains(activity.id)) {
+            MyApp.recentList.add(activity.id);
+          }
         },
       );
     } else if (activity is Task) {
@@ -354,7 +357,9 @@ class _PageActivitiesState extends State<PageActivities> {
         trailing: trailing,
         onTap: () {
           _navigateDownIntervals(activity.id);
-          recentList.add(activity);
+          if(!MyApp.recentList.contains(activity.id)) {
+            MyApp.recentList.add(activity.id);
+          }
         },
       );
     } else {

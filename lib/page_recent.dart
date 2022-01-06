@@ -7,7 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 
 class PageRecent extends StatefulWidget {
-  final List<Activity> recent;
+  final List<int> recent;
   final int size;
   const PageRecent(this.recent,this.size, {Key? key}) : super(key: key);
 
@@ -17,39 +17,54 @@ class PageRecent extends StatefulWidget {
 
 class _PageRecentState extends State<PageRecent> {
 
+  late final futureActivityList;
   late final int size;
-  late final List<Activity> recent;
+  late final List<int> recent;
 
   @override
   void initState() {
     super.initState();
     size = widget.size;
     recent = widget.recent;
+    futureActivityList= retrieveRecentActivityList(widget.recent);
   }
+
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
-      builder: (context) {
+    return FutureBuilder<ActivityList>(
+      future: futureActivityList,
+      // this makes the tree of children, when available, go into snapshot.data
+      builder: (context, snapshot) {
         // anonymous function
+        if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
+              title: Text(AppLocalizations.of(context)!.searchResult),
             ),
             body: ListView.separated(
               // it's like ListView.builder() but better because it includes a separator between items
               padding: const EdgeInsets.all(16.0),
-              itemCount: size,
+              itemCount: snapshot.data!.matchingList.length,
               itemBuilder: (BuildContext context, int index) =>
-                  _buildRow(recent![index], index),
+                  _buildRow(snapshot.data!.matchingList[index], index),
               separatorBuilder: (BuildContext context, int index) =>
               const Divider(),
             ),
           );
+        } else if (snapshot.hasError) {
+          return Text("${snapshot.error}");
+        }
+        // By default, show a progress indicator
+        return Container(
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ));
       },
     );
-
   }
-
   Widget _buildRow(Activity activity, int index) {
     String strDuration =
         Duration(seconds: activity.duration).toString().split('.').first;

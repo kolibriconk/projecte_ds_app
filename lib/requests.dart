@@ -114,6 +114,7 @@ Future<ActivityList> retrieveRecentActivityList(List<int> list) async {
     if(i!=list.length-1){
       idString=idString+"&";
     }
+    urlToParse= urlToParse+idString;
   }
   var uri =
   Uri.parse(urlToParse);
