@@ -14,8 +14,9 @@ import 'floating_action_button.dart';
 
 class PageIntervals extends StatefulWidget {
   final int id;
+  final String tagList;
 
-   const PageIntervals(this.id, {Key? key}) : super(key: key);
+   const PageIntervals(this.id, this.tagList, {Key? key}) : super(key: key);
 
   @override
   _PageIntervalsState createState() => _PageIntervalsState();
@@ -23,6 +24,7 @@ class PageIntervals extends StatefulWidget {
 
 class _PageIntervalsState extends State<PageIntervals> {
   late int id;
+  late String tagList;
   late Future<Tree.Tree> futureTree;
 
   late Timer _timer;
@@ -30,10 +32,14 @@ class _PageIntervalsState extends State<PageIntervals> {
 
   late DateFormat dateFormat;
 
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     id = widget.id;
+    tagList = widget.tagList;
     futureTree = getTree(id);
     _activateTimer();
     initializeDateFormatting();
@@ -55,38 +61,63 @@ class _PageIntervalsState extends State<PageIntervals> {
             appBar: AppBar(
               title: Text(task.name),
               actions: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    //TODO: Funcionalidad de editar
-                  },
-                  icon: const Icon(Icons.edit),
-                ),
-                IconButton(
+                Visibility(
+                  visible: snapshot.data!.root.id != 0,
+                  child: IconButton(
                     onPressed: () {
-                      showDialog(
+                      _nameController.text = snapshot.data!.root.name;
+                      _tagController.text = tagList;
+                      showDialog<String>(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
-                          title: Text(AppLocalizations.of(context)!.task+' : '+task.name),
+                          title: Text(
+                              AppLocalizations.of(context)!.editProjectText),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(AppLocalizations.of(context)!.tags+" :"),
+                              TextField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: AppLocalizations.of(context)!.name,
+                                ),
+                              ),
                               const SizedBox(height: 20),
-                              Text(task.tagList.join(",") == ""
-                                  ? AppLocalizations.of(context)!.noTags
-                                  : task.tagList.join(",")),
+                              TextField(
+                                controller: _tagController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: AppLocalizations.of(context)!
+                                      .tagLabelText,
+                                ),
+                              ),
                             ],
                           ),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
-                              child: Text(AppLocalizations.of(context)!.close),
+                              onPressed: () => Navigator.pop(context,
+                                  AppLocalizations.of(context)!.cancel),
+                              child: Text(AppLocalizations.of(context)!.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () => {
+                                editActivity(_nameController.text, id,
+                                    _tagController.text),
+                                Navigator.pop(context,
+                                    AppLocalizations.of(context)!.cancel),
+                                _nameController.text = "",
+                                _tagController.text = "",
+                                _refresh(),
+                              },
+                              child: Text(AppLocalizations.of(context)!.edit),
                             ),
                           ],
                         ),
                       );
                     },
-                    icon: Icon(Icons.info)),
+                    icon: const Icon(Icons.edit),
+                  ),
+                ),
                 IconButton(
                     icon: Icon(Icons.home),
                     onPressed: () {
@@ -94,9 +125,6 @@ class _PageIntervalsState extends State<PageIntervals> {
                         print("pop");
                         Navigator.of(context).pop();
                       }
-                      /* this works also:
-    Navigator.popUntil(context, ModalRoute.withName('/'));
-  */
                       PageActivities(0, "");
                     }),
               ],
