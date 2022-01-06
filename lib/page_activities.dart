@@ -1,16 +1,18 @@
 import 'package:codelab_timetracker/floating_action_button.dart';
 import 'package:codelab_timetracker/page_intervals.dart';
+import 'package:codelab_timetracker/page_recent.dart';
 import 'package:codelab_timetracker/page_search_result.dart';
+import 'package:codelab_timetracker/main.dart';
 import 'package:codelab_timetracker/tree.dart' hide getTree;
 import 'package:flutter/material.dart';
 import 'package:codelab_timetracker/requests.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 
+// ignore: must_be_immutable
 class PageActivities extends StatefulWidget {
   final int id;
   final String tagList;
-
   const PageActivities(this.id, this.tagList, {Key? key}) : super(key: key);
 
   @override
@@ -21,6 +23,7 @@ class _PageActivitiesState extends State<PageActivities> {
   late int id;
   late String tagList;
   late Future<Tree> futureTree;
+  //late List<int> recentList;
 
   late Timer _timer;
   static const int periodRefresh = 6;
@@ -35,6 +38,7 @@ class _PageActivitiesState extends State<PageActivities> {
     id = widget.id;
     tagList = widget.tagList;
     futureTree = getTree(id);
+    //recentList = [];
     _activateTimer();
   }
 
@@ -57,6 +61,17 @@ class _PageActivitiesState extends State<PageActivities> {
                   },
                   icon: const Icon(Icons.edit),
                 ),
+                IconButton(
+                    onPressed: () =>
+                    Navigator.of(context)
+                        .push(MaterialPageRoute<void>(
+                      builder: (context) => PageRecent(MyApp.recentList,MyApp.recentList.length),
+                    ))
+                        .then((var value) {
+                      //_activateTimer();
+                      //_refresh();
+                    }),
+                    icon: const Icon(Icons.shortcut)),
                 IconButton(
                     onPressed: () {
                       showDialog(
@@ -82,7 +97,7 @@ class _PageActivitiesState extends State<PageActivities> {
                         ),
                       );
                     },
-                    icon: Icon(Icons.info)),
+                    icon: const Icon(Icons.info)),
                 IconButton(
                     icon: const Icon(Icons.home),
                     onPressed: () {
@@ -116,7 +131,7 @@ class _PageActivitiesState extends State<PageActivities> {
                           TextField(
                             controller: _nameController,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               labelText: AppLocalizations.of(context)!.name,
                             ),
                           ),
@@ -124,7 +139,7 @@ class _PageActivitiesState extends State<PageActivities> {
                           TextField(
                             controller: _tagController,
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
                               labelText: AppLocalizations.of(context)!.tagLabelText,
                             ),
                           ),
@@ -306,8 +321,12 @@ class _PageActivitiesState extends State<PageActivities> {
         leading: const Icon(Icons.folder),
         title: Text(activity.name),
         trailing: Text(strDuration),
-        onTap: () =>
-            _navigateDownActivities(activity.id, activity.tagList.join(",")),
+        onTap: () {
+          _navigateDownActivities(activity.id, activity.tagList.join(","));
+          if(!MyApp.recentList.contains(activity.id)) {
+            MyApp.recentList.add(activity.id);
+          }
+        },
       );
     } else if (activity is Task) {
       Task task = activity;
@@ -336,7 +355,12 @@ class _PageActivitiesState extends State<PageActivities> {
         leading: const Icon(Icons.assignment),
         title: Text(activity.name),
         trailing: trailing,
-        onTap: () => _navigateDownIntervals(activity.id),
+        onTap: () {
+          _navigateDownIntervals(activity.id);
+          if(!MyApp.recentList.contains(activity.id)) {
+            MyApp.recentList.add(activity.id);
+          }
+        },
       );
     } else {
       throw (Exception("Activity that is neither a Task or a Project")); //TODO EXCEPTION

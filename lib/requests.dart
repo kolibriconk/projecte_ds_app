@@ -104,5 +104,28 @@ Future<ActivityList> retrieveActivityListChilds(String tagToSearch,int id) async
     print("statusCode=$response.statusCode");
     throw Exception("Connection error");
   }
-  "childrenschi";
+}
+
+Future<ActivityList> retrieveRecentActivityList(List<int> list) async {
+  String urlToParse;
+  urlToParse = "$baseUrl/getActivitys?";
+  for(int i=0; i<list.length; i++){
+    String idString = list[i].toString();
+    if(i!=list.length-1){
+      idString=idString+"&";
+    }
+    urlToParse= urlToParse+idString;
+  }
+  var uri =
+  Uri.parse(urlToParse);
+  final response = await client.get(uri);
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+    List<dynamic> decoded = convert.jsonDecode(response.body);
+    print(decoded.toString());
+    return ActivityList(decoded);
+  } else {
+    print("statusCode=$response.statusCode");
+    throw Exception("Connection error");
+  }
 }
