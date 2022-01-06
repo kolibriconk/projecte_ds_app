@@ -254,8 +254,8 @@ class _PageIntervalsState extends State<PageIntervals> {
 
     return ListTile(
       title: Text(
-        AppLocalizations.of(context)!.from + ' ' + DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)) + ' ' +
-        AppLocalizations.of(context)!.to + ' ' +  DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate))
+        AppLocalizations.of(context)!.from + ' ' + DateFormat.yMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)) + ' ' +
+        AppLocalizations.of(context)!.to + ' ' +  DateFormat.yMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate))
           ),
       trailing: Text('$strDuration'),
     );
