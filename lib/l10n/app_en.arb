@@ -19,7 +19,10 @@
   "search" : "Search",
   "searchResult" : "Search result",
   "from" : "from",
-  "to": "to"
+  "to": "to",
+  "edit": "Edit",
+  "editProjectText": "Edit project"
+
 
 
 
