@@ -139,7 +139,7 @@ class _PageActivitiesState extends State<PageActivities> {
                               Text(AppLocalizations.of(context)!.tags + ' : '),
                               const SizedBox(height: 20),
                               Text(snapshot.data!.root.tagList.join(",") == ""
-                                  ? AppLocalizations.of(context)!.tags
+                                  ? AppLocalizations.of(context)!.noTags
                                   : snapshot.data!.root.tagList.join(",")),
                             ],
                           ),
@@ -419,7 +419,7 @@ class _PageActivitiesState extends State<PageActivities> {
         title: Text(activity.name),
         trailing: trailing,
         onTap: () {
-          _navigateDownIntervals(activity.id);
+          _navigateDownIntervals(activity.id, activity.tagList.join(","));
           if (!MyApp.recentList.contains(activity.id)) {
             MyApp.recentList.add(activity.id);
           }
@@ -445,10 +445,10 @@ class _PageActivitiesState extends State<PageActivities> {
     });
   }
 
-  void _navigateDownIntervals(int childId) {
+  void _navigateDownIntervals(int childId, String tags) {
     Navigator.of(context)
         .push(MaterialPageRoute<void>(
-      builder: (context) => PageIntervals(childId),
+      builder: (context) => PageIntervals(childId, tags),
     ))
         .then((var value) {
       //_activateTimer();
