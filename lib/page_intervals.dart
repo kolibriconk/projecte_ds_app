@@ -8,7 +8,6 @@ import 'package:codelab_timetracker/tree.dart' as Tree hide getTree;
 import 'package:codelab_timetracker/requests.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 import 'floating_action_button.dart';
 
@@ -28,7 +27,6 @@ class _PageIntervalsState extends State<PageIntervals> {
   late Timer _timer;
   static const int periodeRefresh = 6;
 
-  late DateFormat dateFormat;
 
   @override
   void initState() {
@@ -36,8 +34,6 @@ class _PageIntervalsState extends State<PageIntervals> {
     id = widget.id;
     futureTree = getTree(id);
     _activateTimer();
-    initializeDateFormatting();
-    dateFormat = DateFormat(Intl.systemLocale);
   }
 
   @override
@@ -180,6 +176,12 @@ class _PageIntervalsState extends State<PageIntervals> {
     String strInitialDate = task.initialDate.toString().split('.')[0];
     // this removes the microseconds part
     String strFinalDate = task.finalDate.toString().split('.')[0];
+
+    if (strInitialDate == 'null') {
+      strInitialDate = DateTime.now().toString();
+      strFinalDate = DateTime.now().toString();
+    }
+
     return Column(
       children: [
         const Divider(
@@ -251,6 +253,11 @@ class _PageIntervalsState extends State<PageIntervals> {
     String strInitialDate = interval.initialDate.toString().split('.')[0];
     // this removes the microseconds part
     String strFinalDate = interval.finalDate.toString().split('.')[0];
+
+    if (strInitialDate == 'null') {
+      strInitialDate = DateTime.now().toString();
+      strFinalDate = DateTime.now().toString();
+    }
 
     return ListTile(
       title: Text(
