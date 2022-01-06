@@ -216,7 +216,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.firstTime + ' ' + strInitialDate/*DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate))*/,
+                    child: Text(AppLocalizations.of(context)!.firstTime + ' ' + DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)),
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -235,7 +235,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.lastActivity + ' '+ strFinalDate/*DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate))*/,
+                    child: Text(AppLocalizations.of(context)!.lastActivity + ' '+ DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate)),
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -254,8 +254,8 @@ class _PageIntervalsState extends State<PageIntervals> {
 
     return ListTile(
       title: Text(
-        AppLocalizations.of(context)!.from + ' ' + strInitialDate /*DateFormat.yMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate))*/ + ' ' +
-        AppLocalizations.of(context)!.to + ' ' + strFinalDate /*DateFormat.yMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate))*/
+        AppLocalizations.of(context)!.from + ' ' + DateFormat.yMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)) + ' ' +
+        AppLocalizations.of(context)!.to + ' ' +  DateFormat.yMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate))
           ),
       trailing: Text('$strDuration'),
     );
