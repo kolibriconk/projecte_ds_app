@@ -6,7 +6,7 @@ final http.Client client = http.Client();
 // better than http.get() if multiple requests to the same server
 
 // If you connect the Android emulator to the webserver listening to localhost:8080
-//const String baseUrl = "http://192.168.1.137:8080"; // Para Jose
+//const String baseUrl = "http://192.168.1.10:8080"; // Para Jose
 const String baseUrl = "http://localhost:8080";
 
 // If instead you want to use a real phone, you need ngrok to redirect
@@ -65,6 +65,20 @@ Future<bool> addActivity(
     String name, int parentId, bool isProject, String tagList) async {
   var uri =
       Uri.parse("$baseUrl/addActivity?$name&$parentId&$isProject&$tagList");
+  final response = await client.get(uri);
+  if (response.statusCode == 200) {
+    print("statusCode=$response.statusCode");
+    Map<String, dynamic> decoded = convert.jsonDecode(response.body);
+    return decoded['added'];
+  } else {
+    print("statusCode=$response.statusCode");
+    return false;
+  }
+}
+
+Future<bool> editActivity(String name, int activityId, String tagList) async {
+  var uri =
+  Uri.parse("$baseUrl/editActivity?$name&$activityId&$tagList");
   final response = await client.get(uri);
   if (response.statusCode == 200) {
     print("statusCode=$response.statusCode");

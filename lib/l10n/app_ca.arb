@@ -19,6 +19,8 @@
   "search" : "Buscar",
   "searchResult" : "Resultat de la cerca",
   "from" : "Des de",
-  "to": "fins"
+  "to": "fins",
+  "edit": "Modificar",
+  "editProjectText": "Editar projecte"
 
 }

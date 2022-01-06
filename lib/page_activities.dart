@@ -13,6 +13,7 @@ import 'dart:async';
 class PageActivities extends StatefulWidget {
   final int id;
   final String tagList;
+
   const PageActivities(this.id, this.tagList, {Key? key}) : super(key: key);
 
   @override
@@ -23,6 +24,7 @@ class _PageActivitiesState extends State<PageActivities> {
   late int id;
   late String tagList;
   late Future<Tree> futureTree;
+
   //late List<int> recentList;
 
   late Timer _timer;
@@ -55,33 +57,86 @@ class _PageActivitiesState extends State<PageActivities> {
               title: Text(snapshot.data!.root.name),
               actions: <Widget>[
                 _buildSearch(),
-                IconButton(
-                  onPressed: (){
-                    //TODO: Funcionalidad de editar
-                  },
-                  icon: const Icon(Icons.edit),
+                Visibility(
+                  visible: snapshot.data!.root.id != 0,
+                  child: IconButton(
+                    onPressed: () {
+                      _nameController.text = snapshot.data!.root.name;
+                      _tagController.text = tagList;
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          title: Text(
+                              AppLocalizations.of(context)!.editProjectText),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              TextField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: AppLocalizations.of(context)!.name,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              TextField(
+                                controller: _tagController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: AppLocalizations.of(context)!
+                                      .tagLabelText,
+                                ),
+                              ),
+                            ],
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.pop(context,
+                                  AppLocalizations.of(context)!.cancel),
+                              child: Text(AppLocalizations.of(context)!.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () => {
+                                editActivity(_nameController.text, id,
+                                    _tagController.text),
+                                Navigator.pop(context,
+                                    AppLocalizations.of(context)!.cancel),
+                                _nameController.text = "",
+                                _tagController.text = "",
+                                _refresh(),
+                              },
+                              child: Text(AppLocalizations.of(context)!.edit),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.edit),
+                  ),
                 ),
                 IconButton(
-                    onPressed: () =>
-                    Navigator.of(context)
-                        .push(MaterialPageRoute<void>(
-                      builder: (context) => PageRecent(MyApp.recentList,MyApp.recentList.length),
-                    ))
-                        .then((var value) {
-                      //_activateTimer();
-                      //_refresh();
-                    }),
+                    onPressed: () => Navigator.of(context)
+                            .push(MaterialPageRoute<void>(
+                          builder: (context) => PageRecent(
+                              MyApp.recentList, MyApp.recentList.length),
+                        ))
+                            .then((var value) {
+                          //_activateTimer();
+                          //_refresh();
+                        }),
                     icon: const Icon(Icons.shortcut)),
                 IconButton(
                     onPressed: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
-                          title: Text(AppLocalizations.of(context)!.project+' : '+snapshot.data!.root.name),
+                          title: Text(AppLocalizations.of(context)!.project +
+                              ' : ' +
+                              snapshot.data!.root.name),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(AppLocalizations.of(context)!.tags+' : '),
+                              Text(AppLocalizations.of(context)!.tags + ' : '),
                               const SizedBox(height: 20),
                               Text(snapshot.data!.root.tagList.join(",") == ""
                                   ? AppLocalizations.of(context)!.tags
@@ -90,7 +145,8 @@ class _PageActivitiesState extends State<PageActivities> {
                           ),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                              onPressed: () => Navigator.pop(context,
+                                  AppLocalizations.of(context)!.cancel),
                               child: Text(AppLocalizations.of(context)!.close),
                             ),
                           ],
@@ -140,21 +196,24 @@ class _PageActivitiesState extends State<PageActivities> {
                             controller: _tagController,
                             decoration: InputDecoration(
                               border: const OutlineInputBorder(),
-                              labelText: AppLocalizations.of(context)!.tagLabelText,
+                              labelText:
+                                  AppLocalizations.of(context)!.tagLabelText,
                             ),
                           ),
                         ],
                       ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                          onPressed: () => Navigator.pop(
+                              context, AppLocalizations.of(context)!.cancel),
                           child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                         TextButton(
                           onPressed: () => {
                             addActivity(_nameController.text, id, true,
                                 _tagController.text),
-                            Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                            Navigator.pop(
+                                context, AppLocalizations.of(context)!.cancel),
                             _nameController.text = "",
                             _tagController.text = "",
                             _refresh(),
@@ -186,21 +245,24 @@ class _PageActivitiesState extends State<PageActivities> {
                             controller: _tagController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              labelText: AppLocalizations.of(context)!.tagLabelText,
+                              labelText:
+                                  AppLocalizations.of(context)!.tagLabelText,
                             ),
                           ),
                         ],
                       ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                          onPressed: () => Navigator.pop(
+                              context, AppLocalizations.of(context)!.cancel),
                           child: Text(AppLocalizations.of(context)!.cancel),
                         ),
                         TextButton(
                           onPressed: () => {
                             addActivity(_nameController.text, id, false,
                                 _tagController.text),
-                            Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                            Navigator.pop(
+                                context, AppLocalizations.of(context)!.cancel),
                             _nameController.text = "",
                             _tagController.text = "",
                             _refresh(),
@@ -229,55 +291,13 @@ class _PageActivitiesState extends State<PageActivities> {
     );
   }
 
-  Widget _buildSearch(){
-
-    if(id==0) {
+  Widget _buildSearch() {
+    if (id == 0) {
       return IconButton(
           onPressed: () {
             showDialog(
               context: context,
-              builder: (BuildContext context) =>
-                  AlertDialog(
-                    title: Text(AppLocalizations.of(context)!.textTag),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: _filterController,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: AppLocalizations.of(context)!.textFiledTag,
-                          ),
-                        )
-                      ],
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
-                        child: Text(AppLocalizations.of(context)!.cancel),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          if (_filterController.text != "") {
-                            Navigator.pop(context, AppLocalizations.of(context)!.cancel);
-                            _navigateToResultSearch(_filterController.text);
-                          }
-                        },
-                        child: Text(AppLocalizations.of(context)!.search),
-                      ),
-                    ],
-                  ),
-            );
-          },
-          icon: const Icon(Icons.search));
-    }
-    else{
-      return IconButton(
-          onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) =>
-              AlertDialog(
+              builder: (BuildContext context) => AlertDialog(
                 title: Text(AppLocalizations.of(context)!.textTag),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -293,13 +313,55 @@ class _PageActivitiesState extends State<PageActivities> {
                 ),
                 actions: <Widget>[
                   TextButton(
-                    onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
+                    onPressed: () => Navigator.pop(
+                        context, AppLocalizations.of(context)!.cancel),
                     child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                   TextButton(
                     onPressed: () {
                       if (_filterController.text != "") {
-                        Navigator.pop(context, AppLocalizations.of(context)!.cancel);
+                        Navigator.pop(
+                            context, AppLocalizations.of(context)!.cancel);
+                        _navigateToResultSearch(_filterController.text);
+                      }
+                    },
+                    child: Text(AppLocalizations.of(context)!.search),
+                  ),
+                ],
+              ),
+            );
+          },
+          icon: const Icon(Icons.search));
+    } else {
+      return IconButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: Text(AppLocalizations.of(context)!.textTag),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: _filterController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: AppLocalizations.of(context)!.textFiledTag,
+                      ),
+                    )
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.pop(
+                        context, AppLocalizations.of(context)!.cancel),
+                    child: Text(AppLocalizations.of(context)!.cancel),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (_filterController.text != "") {
+                        Navigator.pop(
+                            context, AppLocalizations.of(context)!.cancel);
                         _navigateToResultSearchChilds(_filterController.text);
                       }
                     },
@@ -307,8 +369,9 @@ class _PageActivitiesState extends State<PageActivities> {
                   ),
                 ],
               ),
-        );
-      }, icon: const Icon(Icons.search));
+            );
+          },
+          icon: const Icon(Icons.search));
     }
   }
 
@@ -323,7 +386,7 @@ class _PageActivitiesState extends State<PageActivities> {
         trailing: Text(strDuration),
         onTap: () {
           _navigateDownActivities(activity.id, activity.tagList.join(","));
-          if(!MyApp.recentList.contains(activity.id)) {
+          if (!MyApp.recentList.contains(activity.id)) {
             MyApp.recentList.add(activity.id);
           }
         },
@@ -357,13 +420,14 @@ class _PageActivitiesState extends State<PageActivities> {
         trailing: trailing,
         onTap: () {
           _navigateDownIntervals(activity.id);
-          if(!MyApp.recentList.contains(activity.id)) {
+          if (!MyApp.recentList.contains(activity.id)) {
             MyApp.recentList.add(activity.id);
           }
         },
       );
     } else {
-      throw (Exception("Activity that is neither a Task or a Project")); //TODO EXCEPTION
+      throw (Exception(
+          "Activity that is neither a Task or a Project")); //TODO EXCEPTION
       // this solves the problem of return Widget is not nullable because an
       // Exception is also a Widget?
     }
@@ -394,18 +458,16 @@ class _PageActivitiesState extends State<PageActivities> {
   }
 
   void _navigateToResultSearch(String text) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(
-      builder: (context) => PageSearchResult(text,0,0),
-    ));
-  }
-  void _navigateToResultSearchChilds(String text) {
-    Navigator.of(context)
-        .push(MaterialPageRoute<void>(
-      builder: (context) => PageSearchResult(text,1,id),
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (context) => PageSearchResult(text, 0, 0),
     ));
   }
 
+  void _navigateToResultSearchChilds(String text) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+      builder: (context) => PageSearchResult(text, 1, id),
+    ));
+  }
 
   void _refresh() async {
     futureTree = getTree(id); // to be used in build()
@@ -426,6 +488,4 @@ class _PageActivitiesState extends State<PageActivities> {
     _timer.cancel();
     super.dispose();
   }
-
-
 }

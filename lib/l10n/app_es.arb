@@ -19,6 +19,9 @@
   "search" : "Buscar",
   "searchResult" : "Resultado de la búsqueda",
   "from" : "Desde",
-  "to": "hasta"
+  "to": "hasta",
+  "edit": "Modificar",
+  "editProjectText": "Editar proyecto"
+
 
 }
