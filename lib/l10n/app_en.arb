@@ -21,7 +21,9 @@
   "from" : "from",
   "to": "to",
   "edit": "Edit",
-  "editProjectText": "Edit project"
+  "editProjectText": "Edit project",
+  "noData": "Data missing"
+
 
 
 

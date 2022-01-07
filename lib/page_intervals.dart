@@ -28,13 +28,15 @@ class _PageIntervalsState extends State<PageIntervals> {
   late Timer _timer;
   static const int periodeRefresh = 6;
 
-  late DateFormat dateFormat;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _tagController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     id = widget.id;
-    futureTree = getTree(id, 0);
+    futureTree = getTree(id);
     _activateTimer();
     initializeDateFormatting();
     dateFormat = DateFormat(Intl.systemLocale);
@@ -55,38 +57,63 @@ class _PageIntervalsState extends State<PageIntervals> {
             appBar: AppBar(
               title: Text(task.name),
               actions: <Widget>[
-                IconButton(
-                  onPressed: () {
-                    //TODO: Funcionalidad de editar
-                  },
-                  icon: const Icon(Icons.edit),
-                ),
-                IconButton(
+                Visibility(
+                  visible: snapshot.data!.root.id != 0,
+                  child: IconButton(
                     onPressed: () {
-                      showDialog(
+                      _nameController.text = snapshot.data!.root.name;
+                      _tagController.text = tagList;
+                      showDialog<String>(
                         context: context,
                         builder: (BuildContext context) => AlertDialog(
-                          title: Text(AppLocalizations.of(context)!.task+' : '+task.name),
+                          title: Text(
+                              AppLocalizations.of(context)!.editProjectText),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(AppLocalizations.of(context)!.tags+" :"),
+                              TextField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: AppLocalizations.of(context)!.name,
+                                ),
+                              ),
                               const SizedBox(height: 20),
-                              Text(task.tagList.join(",") == ""
-                                  ? AppLocalizations.of(context)!.noTags
-                                  : task.tagList.join(",")),
+                              TextField(
+                                controller: _tagController,
+                                decoration: InputDecoration(
+                                  border: const OutlineInputBorder(),
+                                  labelText: AppLocalizations.of(context)!
+                                      .tagLabelText,
+                                ),
+                              ),
                             ],
                           ),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () => Navigator.pop(context, AppLocalizations.of(context)!.cancel),
-                              child: Text(AppLocalizations.of(context)!.close),
+                              onPressed: () => Navigator.pop(context,
+                                  AppLocalizations.of(context)!.cancel),
+                              child: Text(AppLocalizations.of(context)!.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () => {
+                                editActivity(_nameController.text, id,
+                                    _tagController.text),
+                                Navigator.pop(context,
+                                    AppLocalizations.of(context)!.cancel),
+                                _nameController.text = "",
+                                _tagController.text = "",
+                                _refresh(),
+                              },
+                              child: Text(AppLocalizations.of(context)!.edit),
                             ),
                           ],
                         ),
                       );
                     },
-                    icon: Icon(Icons.info)),
+                    icon: const Icon(Icons.edit),
+                  ),
+                ),
                 IconButton(
                     icon: Icon(Icons.home),
                     onPressed: () {
@@ -180,6 +207,15 @@ class _PageIntervalsState extends State<PageIntervals> {
     String strInitialDate = task.initialDate.toString().split('.')[0];
     // this removes the microseconds part
     String strFinalDate = task.finalDate.toString().split('.')[0];
+
+    if (strInitialDate == 'null') {
+      strInitialDate = AppLocalizations.of(context)!.noData;
+      strFinalDate = AppLocalizations.of(context)!.noData;
+    }else{
+      strInitialDate = DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate));
+      strFinalDate = DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate));
+    }
+
     return Column(
       children: [
         const Divider(
@@ -216,7 +252,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.firstTime + ' ' + DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strInitialDate)),
+                    child: Text(AppLocalizations.of(context)!.firstTime + ' $strInitialDate',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -235,7 +271,7 @@ class _PageIntervalsState extends State<PageIntervals> {
                   width: 10,
                 ),
                 Flexible(
-                    child: Text(AppLocalizations.of(context)!.lastActivity + ' '+ DateFormat.yMMMMd(Localizations.localeOf(context).toString()).add_jms().format(DateTime.parse(strFinalDate)),
+                    child: Text(AppLocalizations.of(context)!.lastActivity + ' $strFinalDate',
                         textAlign: TextAlign.left,
                         overflow: TextOverflow.visible))
               ],
@@ -251,6 +287,11 @@ class _PageIntervalsState extends State<PageIntervals> {
     String strInitialDate = interval.initialDate.toString().split('.')[0];
     // this removes the microseconds part
     String strFinalDate = interval.finalDate.toString().split('.')[0];
+
+    if (strInitialDate == 'null') {
+      strInitialDate = DateTime.now().toString();
+      strFinalDate = DateTime.now().toString();
+    }
 
     return ListTile(
       title: Text(

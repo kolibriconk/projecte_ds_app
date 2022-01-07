@@ -21,7 +21,9 @@
   "from" : "Desde",
   "to": "hasta",
   "edit": "Modificar",
-  "editProjectText": "Editar proyecto"
+  "editProjectText": "Editar proyecto",
+  "noData": "Sin datos"
+
 
 
 }

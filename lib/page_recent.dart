@@ -91,7 +91,7 @@ class _PageRecentState extends State<PageRecent> {
         leading: const Icon(Icons.assignment),
         title: Text(activity.name),
         trailing: trailing,
-        onTap: () => _navigateDownIntervals(activity.id),
+        onTap: () => _navigateDownIntervals(activity.id, activity.tagList.join(",")),
       );
     } else {
       throw (Exception("Activity that is neither a Task or a Project")); //TODO EXCEPTION
@@ -107,9 +107,9 @@ class _PageRecentState extends State<PageRecent> {
     ));
   }
 
-  void _navigateDownIntervals(int childId) {
+  void _navigateDownIntervals(int childId, String tags) {
     Navigator.of(context).push(MaterialPageRoute<void>(
-      builder: (context) => PageIntervals(childId),
+      builder: (context) => PageIntervals(childId, tags),
     ));
     //https://stackoverflow.com/questions/49830553/how-to-go-back-and-refresh-the-previous-page-in-flutter?noredirect=1&lq=1
   }
