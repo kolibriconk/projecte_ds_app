@@ -271,7 +271,8 @@ class _PageActivitiesState extends State<PageActivities> {
                     _refresh();
                     String message = AppLocalizations.of(context)!.sortingType;
                     if (option == 1) {
-                      message = AppLocalizations.of(context)!.sortingAlphabetical;
+                      message =
+                          AppLocalizations.of(context)!.sortingAlphabetical;
                     } else if (option == 2) {
                       message = AppLocalizations.of(context)!.sortingCreation;
                     }
