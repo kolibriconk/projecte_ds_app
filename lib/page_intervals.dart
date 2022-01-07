@@ -14,9 +14,9 @@ import 'floating_action_button.dart';
 
 class PageIntervals extends StatefulWidget {
   final int id;
+  final String tagList;
 
-   const PageIntervals(this.id, {Key? key}) : super(key: key);
-
+  const PageIntervals(this.id, this.tagList, {Key? key}) : super(key: key);
   @override
   _PageIntervalsState createState() => _PageIntervalsState();
 }
@@ -24,6 +24,7 @@ class PageIntervals extends StatefulWidget {
 class _PageIntervalsState extends State<PageIntervals> {
   late int id;
   late Future<Tree.Tree> futureTree;
+  late String tagList;
 
   late Timer _timer;
   static const int periodeRefresh = 6;
@@ -36,10 +37,10 @@ class _PageIntervalsState extends State<PageIntervals> {
   void initState() {
     super.initState();
     id = widget.id;
-    futureTree = getTree(id);
+    futureTree = getTree(id, 0);
     _activateTimer();
     initializeDateFormatting();
-    dateFormat = DateFormat(Intl.systemLocale);
+    tagList = widget.tagList;
   }
 
   @override
