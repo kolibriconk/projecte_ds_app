@@ -25,6 +25,7 @@ class _PageActivitiesState extends State<PageActivities> {
   late String tagList;
   late Future<Tree> futureTree;
   late int option;
+
   //late List<int> recentList;
 
   late Timer _timer;
@@ -39,7 +40,7 @@ class _PageActivitiesState extends State<PageActivities> {
     super.initState();
     id = widget.id;
     tagList = widget.tagList;
-    futureTree = getTree(id,0);
+    futureTree = getTree(id, 0);
     //recentList = [];
     _activateTimer();
     option = 0;
@@ -116,22 +117,6 @@ class _PageActivitiesState extends State<PageActivities> {
                   ),
                 ),
                 IconButton(
-                    onPressed: () => Navigator.of(context)
-                            .push(MaterialPageRoute<void>(
-                          builder: (context) => PageRecent(
-                              MyApp.recentList, MyApp.recentList.length),
-                        ))
-                            .then((var value) {
-                          //_activateTimer();
-                          //_refresh();
-                        }),
-                    icon: const Icon(Icons.shortcut)),
-                IconButton(
-                    onPressed: () {
-                        option = (option +1) % 3;
-                      },
-                    icon: const Icon(Icons.sort)),
-                IconButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -160,14 +145,6 @@ class _PageActivitiesState extends State<PageActivities> {
                       );
                     },
                     icon: const Icon(Icons.info)),
-                IconButton(
-                    icon: const Icon(Icons.home),
-                    onPressed: () {
-                      while (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-                      PageActivities(0, snapshot.data!.root.tagList.join(","));
-                    }),
               ],
             ),
             body: ListView.separated(
@@ -279,6 +256,50 @@ class _PageActivitiesState extends State<PageActivities> {
                     ),
                   ),
                   icon: const Icon(Icons.assignment),
+                ),
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.blue,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white,
+              onTap: (newIndex) {
+                switch (newIndex) {
+                  case 0:
+                    option = (option + 1) % 3;
+                    _refresh();
+                    String message = AppLocalizations.of(context)!.sortingType;
+                    if (option == 1) {
+                      message = AppLocalizations.of(context)!.sortingAlphabetical;
+                    } else if (option == 2) {
+                      message = AppLocalizations.of(context)!.sortingCreation;
+                    }
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(message),
+                    ));
+                    break;
+                  case 1:
+                    while (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    }
+                    PageActivities(0, snapshot.data!.root.tagList.join(","));
+                    break;
+                  case 2:
+                    Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (context) =>
+                          PageRecent(MyApp.recentList, MyApp.recentList.length),
+                    ));
+                    break;
+                }
+              },
+              items: const [
+                BottomNavigationBarItem(icon: Icon(Icons.sort), label: 'Order'),
+                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.shortcut),
+                  label: 'Recents',
                 ),
               ],
             ),
@@ -432,8 +453,7 @@ class _PageActivitiesState extends State<PageActivities> {
         },
       );
     } else {
-      throw (Exception(
-          "Activity that is neither a Task or a Project")); //TODO EXCEPTION
+      throw (Exception("Activity that is neither a Task or a Project"));
       // this solves the problem of return Widget is not nullable because an
       // Exception is also a Widget?
     }

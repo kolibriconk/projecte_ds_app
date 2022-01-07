@@ -22,7 +22,10 @@
   "to": "hasta",
   "edit": "Modificar",
   "editProjectText": "Editar proyecto",
-  "noData": "Sin datos"
+  "noData": "Sin datos",
+  "sortingType": "Ordenación cambiada a tipo",
+  "sortingAlphabetical": "Ordenación cambiada a alfabética",
+                         "sortingCreation": "Ordenación cambiada a creación"
 
 
 

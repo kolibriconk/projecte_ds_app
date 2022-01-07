@@ -22,10 +22,8 @@
   "to": "to",
   "edit": "Edit",
   "editProjectText": "Edit project",
-  "noData": "Data missing"
-
-
-
-
-
+  "noData": "Data missing",
+  "sortingType": "Sorting changed to type",
+  "sortingAlphabetical": "Sorting changed to alphabetical",
+  "sortingCreation": "Sorting changed to creation"
 }

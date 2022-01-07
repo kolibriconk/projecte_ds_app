@@ -22,6 +22,9 @@
   "to": "fins",
   "edit": "Modificar",
   "editProjectText": "Editar projecte",
-  "noData": "Sense dades"
+  "noData": "Sense dades",
+  "sortingType": "Ordenació canviada a tipus",
+  "sortingAlphabetical": "Ordenació canviada a alfabetica",
+  "sortingCreation": "Ordenació canviada a creació"
 
 }
