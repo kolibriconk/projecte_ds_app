@@ -25,7 +25,10 @@
   "noData": "Sin datos",
   "sortingType": "Ordenación cambiada a tipo",
   "sortingAlphabetical": "Ordenación cambiada a alfabética",
-                         "sortingCreation": "Ordenación cambiada a creación"
+  "sortingCreation": "Ordenación cambiada a creación",
+  "sort": "Ordenar",
+  "recent": "Recientes",
+  "home": "Inicio"
 
 
 

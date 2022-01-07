@@ -25,6 +25,9 @@
   "noData": "Sense dades",
   "sortingType": "Ordenació canviada a tipus",
   "sortingAlphabetical": "Ordenació canviada a alfabetica",
-  "sortingCreation": "Ordenació canviada a creació"
+  "sortingCreation": "Ordenació canviada a creació",
+  "sort": "Ordenar",
+  "recent": "Recents",
+  "home": "Inici"
 
 }
